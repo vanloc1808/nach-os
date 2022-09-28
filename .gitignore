@@ -1,2 +1,4 @@
 usr/*
+NachOS-4.0/c++example/*
 *.o
+*.coff
