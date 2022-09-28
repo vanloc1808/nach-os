@@ -96,6 +96,39 @@ ExceptionHandler(ExceptionType which)
 
 	break;
 
+	// ---------------------------------------
+
+	case SC_ReadChar:
+		DEBUG(dbgSys, "\nReading a character from console!");
+
+		int tmp;
+		tmp = (int)SysReadChar(); // Convert char to 32 bit int
+
+		DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
+
+		// Save result to r2
+		kernel->machine->WriteRegister(2, tmp);
+
+		// Set next program counter
+		{
+			/* set previous programm counter (debugging only)*/
+			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+			
+			/* set next programm counter for brach execution */
+			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+		}
+
+		return;
+
+		ASSERTNOTREACHED();
+
+		break;
+
+	// ---------------------------------------
+
       default:
 	cerr << "Unexpected system call " << type << "\n";
 	break;

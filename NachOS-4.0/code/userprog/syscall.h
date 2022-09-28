@@ -37,6 +37,12 @@
 
 #define SC_Add		42
 
+// Custom Syscall -------------------------------
+
+#define SC_ReadChar 80
+
+// ----------------------------------------------
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -49,10 +55,16 @@
  * from the system call entry point in exception.cc.
  */
 
+
+// Custom handler ----------------------------------
+
+char ReadChar();
+
+// --------------------------------------------------
+
 /* Stop Nachos, and print out performance stats */
 void Halt();		
- 
- 
+
 /*
  * Add the two operants and return the result
  */ 
@@ -105,8 +117,8 @@ typedef int OpenFileId;
  * the console device.
  */
 
-#define ConsoleInput	0  
-#define ConsoleOutput	1  
+// #define ConsoleInput	0  
+// #define ConsoleOutput	1  
  
 /* Create a Nachos file, with name "name" */
 /* Note: Create does not open the file.   */
