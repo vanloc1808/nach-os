@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add halt shell matmult sort segments
+PROGRAMS = add halt shell matmult sort segments readchar
 endif
 
 all: $(PROGRAMS)
@@ -169,3 +169,12 @@ unknownhost:
 	@echo make is terminating.
 	@echo If you are on an MFCF machine, contact the instructor to report this problem
 	@echo Otherwise, edit Makefile.dep and try again.
+
+# --------------------------------------
+readchar.o: readchar.c
+	$(CC) $(CFLAGS) -c readchar.c
+
+readchar: readchar.o start.o
+	$(LD) $(LDFLAGS) start.o readchar.o -o readchar.coff
+	$(COFF2NOFF) readchar.coff readchar
+# --------------------------------------
