@@ -39,6 +39,30 @@ char SysReadChar()
 	return inp->GetChar();
 }
 
+/**
+	input: number at register 4 and 5
+	output: sum of them
+*/
+void SystemCallAdd() {
+	DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
+	
+	/* Process SysAdd Systemcall*/
+	int result;
+	result = SysAdd(/* int operand1 */(int)kernel->machine->ReadRegister(4),
+			/* int operand2 */(int)kernel->machine->ReadRegister(5));
+
+	DEBUG(dbgSys, "Add returning with " << result << "\n");
+	/* Prepare Result */
+	kernel->machine->WriteRegister(2, (int)result);
+}
+
+void SystemCallExit() {
+	DEBUG(dbgSys, "Exit system call.\n");
+	kernel->systemLock->Release();
+	kernel->currentThread->Finish();
+}
+
+
 // --------------------------------------------------------------------
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */

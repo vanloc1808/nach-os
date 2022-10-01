@@ -90,73 +90,6 @@ void ProcessPCRegister() {
 	kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
 }
 
-/**
-	input: number at register 4 and 5
-	output: sum of them
-*/
-void SystemCallAdd() {
-	DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
-	
-	/* Process SysAdd Systemcall*/
-	int result;
-	result = SysAdd(/* int operand1 */(int)kernel->machine->ReadRegister(4),
-			/* int operand2 */(int)kernel->machine->ReadRegister(5));
-
-	DEBUG(dbgSys, "Add returning with " << result << "\n");
-	/* Prepare Result */
-	kernel->machine->WriteRegister(2, (int)result);
-}
-
-void SystemCallExit() {
-	DEBUG(dbgSys, "Exit system call.\n");
-	kernel->systemLock->Release();
-	kernel->currentThread->Finish();
-}
-
-/**
-	input: int, the address of thread
-	output: -1 if failed, thread id if successful
-*/
-void SystemCallExec() {
-	DEBUG(dbgSys, "Exec system call.\n");
-
-	int virtualAddress = kernel->machine->ReadRegister(4);
-
-	char* name = User2System(virtualAddress, MAX_FILENAME_LEN + 1);
-
-	if (name == NULL) {
-		DEBUG(dbgSys, "Not enough memory space.\n");
-		printf("Error. Not enough memory space.\n");
-
-		kernel->machine->WriteRegister(2, -1);
-
-		ProcessPCRegister();
-
-		return;
-	}
-
-	// OpenFile* of = fileSystem->Open(name);
-	// if (of == NULL) {
-	// 	DEBUG(dbgSys, "Cannot open this file.\n");
-	// 	print("Error. Cannot open this file.\n");
-
-	// 	kernel->machine->WriteRegister(2, -1);
-
-	// 	ProcessPCRegister();
-
-	// 	return;
-	// }
-
-	// delete of;
-
-	// int id = pageTable->ExecUpdate(name);
-	// kernel->machine->WriteRegister(2, id);
-
-	delete []name;
-
-	return;
-}
-
 void ExceptionHandler(ExceptionType which) {
     int type = kernel->machine->ReadRegister(2);
 
@@ -172,7 +105,7 @@ void ExceptionHandler(ExceptionType which) {
 			// output: halt (shutdown) the system
 			DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
 			SysHalt();
-			ASSERTNOTREACHED(); // I haven"t understood what this line of code is used for, so I let it lie here
+			//ASSERTNOTREACHED(); // I haven"t understood what this line of code is used for, so I let it lie here
 			break;
 
 		case SC_Add:
@@ -180,62 +113,89 @@ void ExceptionHandler(ExceptionType which) {
 			/* Modify return point */
 			ProcessPCRegister();
 			// return; // why they put a return here? .-.			
-			ASSERTNOTREACHED();
+			//ASSERTNOTREACHED();
 			break;
 
 		case SC_Exit:
 			SystemCallExit();
 			ProcessPCRegister();
-			ASSERTNOTREACHED();
+			//ASSERTNOTREACHED();
 			break;
-		
-		case SC_Exec:
-			SystemCallExec();
+
+
+
+	// ---------------------------------------
+
+		case SC_ReadChar:
+			DEBUG(dbgSys, "\nReading a character from console!");
+
+			int tmp;
+			tmp = (int)SysReadChar(); // Convert char to 32 bit int
+
+			DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
+
+			// Save result to r2
+			kernel->machine->WriteRegister(2, tmp);
+
 			ProcessPCRegister();
-			ASSERTNOTREACHED();
+
+			//return;
+
+			//ASSERTNOTREACHED();
+
 			break;
 
-
-	// ---------------------------------------
-
-	case SC_ReadChar:
-		DEBUG(dbgSys, "\nReading a character from console!");
-
-		int tmp;
-		tmp = (int)SysReadChar(); // Convert char to 32 bit int
-
-		DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
-
-		// Save result to r2
-		kernel->machine->WriteRegister(2, tmp);
-
-		// Set next program counter
-		{
-			/* set previous programm counter (debugging only)*/
-			kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-			/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-			kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
-			
-			/* set next programm counter for brach execution */
-			kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-		}
-
-		return;
-
-		ASSERTNOTREACHED();
-
+		// ---------------------------------------
+			default:
+			cerr << "Unexpected system call " << type << "\n";
+			break;
+      	}
+      	break;
+	case PageFaultException:
+		DEBUG(dbgSys, "No valid translation found\n");
+		printf("No valid translation found\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
 		break;
-
-	// ---------------------------------------
-		default:
-		cerr << "Unexpected system call " << type << "\n";
+	case ReadOnlyException:
+		DEBUG(dbgSys, "Write attempted to page marked \"read-only\"\n");
+		printf("Write attempted to page marked \"read-only\"\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
 		break;
-      }
-      break;
-    default:
-      cerr << "Unexpected user mode exception" << (int)which << "\n";
-      break;
+	case BusErrorException:
+		DEBUG(dbgSys, "Translation resulted in an invalid physical address\n");
+		printf("Translation resulted in an invalid physical address\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
+		break;
+	case AddressErrorException:
+		DEBUG(dbgSys, "Unaligned reference or one that was beyond the end of the address space\n");
+		printf("Unaligned reference or one that was beyond the end of the address space\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
+		break;
+	case OverflowException:
+		DEBUG(dbgSys, "Integer overflow in add or sub.\n");
+		printf("Integer overflow in add or sub.\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
+		break;
+	case IllegalInstrException:
+		DEBUG(dbgSys, "Unimplemented or reserved instr.\n");
+		printf("Unimplemented or reserved instr.\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
+		break;
+	case NumExceptionTypes:
+		DEBUG(dbgSys, "NumExceptionTypes\n");
+		printf("NumExceptionTypes\n");
+		kernel->interrupt->Halt();
+		//ASSERTNOTREACHED();
+		break;
+	default:
+		cerr << "Unexpected user mode exception" << (int)which << "\n";
+		break;
     }
 	ASSERTNOTREACHED(); 
 }
