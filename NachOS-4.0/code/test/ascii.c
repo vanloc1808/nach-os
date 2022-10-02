@@ -5,10 +5,10 @@ int main() {
 
     while (c <= (unsigned char)(255)) {
         PrintNum((int)c);
-        PrintChar(': ');
+        PrintString(": ");
         PrintChar(c);
 
-        PrintString('\n');
+        PrintChar('\n');
         c++;
     }
 
