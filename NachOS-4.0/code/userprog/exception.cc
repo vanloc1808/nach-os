@@ -98,8 +98,9 @@ void ExceptionHandler(ExceptionType which) {
     switch (which) {
 	case NoException:
 		return;
-    case SyscallException:
-      switch(type) {
+   	case SyscallException:
+		int tmp;
+    		switch(type) {
 		case SC_Halt:
 			// input: no
 			// output: halt (shutdown) the system
@@ -112,7 +113,7 @@ void ExceptionHandler(ExceptionType which) {
 			SystemCallAdd();			
 			/* Modify return point */
 			ProcessPCRegister();
-			// return; // why they put a return here? .-.			
+			return; // why they put a return here? .-.			
 			//ASSERTNOTREACHED();
 			break;
 
@@ -128,29 +129,31 @@ void ExceptionHandler(ExceptionType which) {
 
 		case SC_ReadChar:
 			DEBUG(dbgSys, "\nReading a character from console!");
-
-			int tmp;
 			tmp = (int)SysReadChar(); // Convert char to 32 bit int
-
 			DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
-
 			// Save result to r2
 			kernel->machine->WriteRegister(2, tmp);
-
 			ProcessPCRegister();
+			return;
+			//ASSERTNOTREACHED();
+			break;
 
-			//return;
-
+		case SC_PrintChar:
+			DEBUG(dbgSys, "\nPrinting a character to console!");
+			tmp = kernel->machine->ReadRegister(4);
+			DEBUG(dbgSys, "\nSEND: " << char(tmp) << "\n");
+			SysPrintChar(char(tmp)); 
+			ProcessPCRegister();
+			return;
 			//ASSERTNOTREACHED();
 
 			break;
-
 		// ---------------------------------------
-			default:
+		default:
 			cerr << "Unexpected system call " << type << "\n";
 			break;
-      	}
-      	break;
+      		}
+      		break;
 	case PageFaultException:
 		DEBUG(dbgSys, "No valid translation found\n");
 		printf("No valid translation found\n");

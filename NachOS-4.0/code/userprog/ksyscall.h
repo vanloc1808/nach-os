@@ -39,6 +39,13 @@ char SysReadChar()
 	return inp->GetChar();
 }
 
+
+void SysPrintChar(char c)
+{
+	SynchConsoleOutput* out = (SynchConsoleOutput*)kernel->synchConsoleOut;
+	out->PutChar(c);
+}
+
 /**
 	input: number at register 4 and 5
 	output: sum of them
@@ -57,9 +64,9 @@ void SystemCallAdd() {
 }
 
 void SystemCallExit() {
-	DEBUG(dbgSys, "Exit system call.\n");
-	kernel->systemLock->Release();
-	kernel->currentThread->Finish();
+	//DEBUG(dbgSys, "Exit system call.\n");
+	//kernel->systemLock->Release();
+	//kernel->currentThread->Finish();
 }
 
 

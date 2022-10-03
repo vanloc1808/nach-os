@@ -39,7 +39,8 @@
 
 // Custom Syscall -------------------------------
 
-#define SC_ReadChar 80
+#define SC_ReadChar 	80
+#define SC_PrintChar 	81
 
 // ----------------------------------------------
 
@@ -59,6 +60,7 @@
 // Custom handler ----------------------------------
 
 char ReadChar();
+void PrintChar(char c);
 
 // --------------------------------------------------
 
