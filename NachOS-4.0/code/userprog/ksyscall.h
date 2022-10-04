@@ -14,6 +14,7 @@
 #include "kernel.h"
 #include "synchconsole.h"
 
+#define MAX_SIZE 1024
 
 
 void SysHalt()
@@ -44,6 +45,25 @@ void SysPrintChar(char c)
 {
 	SynchConsoleOutput* out = (SynchConsoleOutput*)kernel->synchConsoleOut;
 	out->PutChar(c);
+}
+
+void SysReadString(char buffer[], int length)
+{
+	for (int i = 0; i < length; i++) {
+		buffer[i] = SysReadChar();
+		if (buffer[i] == '\x00' || buffer[i] == '\n') {
+			break;
+		}
+	}
+}
+
+void SysPrintString(char buffer[])
+{
+	char* i = buffer;
+	while (*i) {
+		SysPrintChar(*i);
+		i++;
+	}
 }
 
 /**

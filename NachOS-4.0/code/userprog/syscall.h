@@ -41,6 +41,8 @@
 
 #define SC_ReadChar 	80
 #define SC_PrintChar 	81
+#define SC_ReadString	82
+#define SC_PrintString 	83
 
 // ----------------------------------------------
 
@@ -61,6 +63,8 @@
 
 char ReadChar();
 void PrintChar(char c);
+void ReadString(char buffer[], int length);
+void PrintString(char buffer[]);
 
 // --------------------------------------------------
 

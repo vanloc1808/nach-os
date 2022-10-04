@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add halt readchar printchar # sort
+PROGRAMS = add halt readchar printchar printstring readstring # sort
 endif
 
 all: $(PROGRAMS)
@@ -191,4 +191,18 @@ sort.o: sort.c
 sort: sort.o start.o
 	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
 	$(COFF2NOFF) sort.coff sort
+
+printstring.o: printstring.c
+	$(CC) $(CFLAGS) -c printstring.c
+
+printstring: printstring.o start.o
+	$(LD) $(LDFLAGS) start.o printstring.o -o printstring.coff
+	$(COFF2NOFF) printstring.coff printstring
+
+readstring.o: readstring.c
+	$(CC) $(CFLAGS) -c readstring.c
+
+readstring: readstring.o start.o
+	$(LD) $(LDFLAGS) start.o readstring.o -o readstring.coff
+	$(COFF2NOFF) readstring.coff readstring
 # --------------------------------------

@@ -55,7 +55,7 @@
 	@return the recorded buffer
 */
 char* User2System(int virtualAddress, int limit) {
-	int idx;
+	// int idx;
 	int oneChar;
 	char* kernelBuffer = NULL;
 
@@ -79,6 +79,29 @@ char* User2System(int virtualAddress, int limit) {
 	return kernelBuffer;
 }
 
+/* 
+ * Input: - User space address (int) 
+ *  - Limit of buffer (int) 
+ *   - Buffer (char[]) 
+ *   Output:- Number of bytes copied (int) 
+ *   Purpose: Copy buffer from System memory space to User memory space 
+ *   */ 
+int System2User(int virtAddr,int len,char* buffer) 
+{ 
+	if (len < 0) return -1; 
+	if (len == 0)return len; 
+	int i = 0; 
+	int oneChar = 0 ; 
+	do { 
+		oneChar= (int) buffer[i]; 
+		kernel->machine->WriteMem(virtAddr+i,1,oneChar); 
+		i++; 
+	} while(i < len && oneChar != 0); 
+	return i; 
+} 
+
+
+
 void ProcessPCRegister() {
 	/* set previous programm counter (debugging only)*/
 	kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
@@ -99,35 +122,35 @@ void ExceptionHandler(ExceptionType which) {
 	case NoException:
 		return;
    	case SyscallException:
-		int tmp;
     		switch(type) {
-		case SC_Halt:
+		case SC_Halt: {
 			// input: no
 			// output: halt (shutdown) the system
 			DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
 			SysHalt();
 			//ASSERTNOTREACHED(); // I haven"t understood what this line of code is used for, so I let it lie here
 			break;
-
-		case SC_Add:
+		}
+		case SC_Add: {
 			SystemCallAdd();			
 			/* Modify return point */
 			ProcessPCRegister();
 			return; // why they put a return here? .-.			
 			//ASSERTNOTREACHED();
 			break;
-
-		case SC_Exit:
+		}
+		case SC_Exit: {
 			SystemCallExit();
 			ProcessPCRegister();
 			//ASSERTNOTREACHED();
 			break;
-
+		}
 
 
 	// ---------------------------------------
 
-		case SC_ReadChar:
+		case SC_ReadChar: {
+			int tmp;
 			DEBUG(dbgSys, "\nReading a character from console!");
 			tmp = (int)SysReadChar(); // Convert char to 32 bit int
 			DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
@@ -137,17 +160,71 @@ void ExceptionHandler(ExceptionType which) {
 			return;
 			//ASSERTNOTREACHED();
 			break;
+		}
 
-		case SC_PrintChar:
+		case SC_PrintChar: {
+			int tmp;
 			DEBUG(dbgSys, "\nPrinting a character to console!");
 			tmp = kernel->machine->ReadRegister(4);
-			DEBUG(dbgSys, "\nSEND: " << char(tmp) << "\n");
+			DEBUG(dbgSys, "\nSEND: " << tmp << "\n");
 			SysPrintChar(char(tmp)); 
 			ProcessPCRegister();
 			return;
 			//ASSERTNOTREACHED();
 
 			break;
+		}
+
+		case SC_ReadString: {
+			DEBUG(dbgSys, "\nReading a string from console!");
+			int virtualAddr;
+			int length;
+			virtualAddr = kernel->machine->ReadRegister(4);
+			length = kernel->machine->ReadRegister(5);
+
+			// Handle special case!
+			if (length < 0 || length >= MAX_SIZE) {
+				// kernel->machine->RaiseException(NumExceptionTypes, virtualAddr);
+				DEBUG(dbgSys, "\nNegative or too large size!");
+				return;
+			}
+
+			char* buffer = new char[length];
+			SysReadString(buffer, length);
+			DEBUG(dbgSys, "\nSystem received: " << buffer);
+			DEBUG(dbgSys, "\nTransmitting to User space!");
+
+			System2User(virtualAddr, length, buffer);
+			delete[] buffer;
+			ProcessPCRegister();
+			
+			return;
+			break;
+		}
+
+		case SC_PrintString: {
+			DEBUG(dbgSys, "\nPrinting a string to console!");
+			int virtualAddr;
+			virtualAddr = kernel->machine->ReadRegister(4);
+			char* buffer;
+			bool flag = true;
+			while(flag) {
+				buffer = User2System(virtualAddr, MAX_SIZE);
+				SysPrintString(buffer);
+				// Check end of string!
+				if (buffer[MAX_SIZE - 1] == 0) {
+					DEBUG(dbgSys, "\nEnd!\n");
+					flag = false;
+				}
+				virtualAddr += MAX_SIZE;
+				delete[] buffer;
+			}
+			ProcessPCRegister();
+			
+			return;
+			break;
+		}
+
 		// ---------------------------------------
 		default:
 			cerr << "Unexpected system call " << type << "\n";
