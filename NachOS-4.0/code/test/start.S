@@ -210,6 +210,30 @@ ReadString:
 	syscall
 	j 	$31
 	.end ReadString
+
+	.globl ReadNum
+	.ent ReadNum
+ReadNum:
+	addiu $2,$0, SC_ReadNum
+	syscall
+	j	$31
+	.end ReadNum
+
+	.globl PrintNum
+	.ent PrintNum
+PrintNum:
+	addiu $2,$0, SC_PrintNum
+	syscall
+	j	$31
+	.end PrintNum
+
+	.globl RandomNum
+	.ent RandomNum
+PrintNum:
+	addiu $2,$0, SC_RandomNum
+	syscall
+	j	$31
+	.end RandomNum
 /* ------------------------------- */
 
 /* dummy function to keep gcc happy */

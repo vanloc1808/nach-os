@@ -225,6 +225,33 @@ void ExceptionHandler(ExceptionType which) {
 			break;
 		}
 
+		case SC_ReadNum:
+		{
+			SystemCallReadNum();			
+			ProcessPCRegister();
+			return;
+			//ASSERTNOTREACHED();
+			break;
+		}
+
+		case SC_PrintNum:
+		{
+			SystemCallPrintNum();
+			ProcessPCRegister();
+			return;
+			//ASSERTNOTREACHED();
+			break;
+		}
+
+		case SC_RandomNum:
+		{
+			SystemCallRandomNum();
+			ProcessPCRegister();
+			return;
+			//ASSERTNOTREACHED();
+			break;
+		}
+
 		// ---------------------------------------
 		default:
 			cerr << "Unexpected system call " << type << "\n";
