@@ -1,0 +1,27 @@
+\section{Exceptions và system calls}
+\subsection{Viết lại file \textit{exception.cc}}
+\subsubsection{Cài đặt lại các exceptions}
+Danh sách các exceptions nằm ở tập tin \textit{machine.h} trong thư mục \textit{/code/machine}.\\
+Trong tập tin \textit{/code/userprog/exception.cc}, dùng cấu trúc \textbf{switch...case} để cài đặt các exception. Với mỗi exception, sau khi đưa thông báo về exception, ta \textbf{Halt} chương trình.
+\subsubsection{Cài đặt các syscalls}
+Cấu trúc \textbf{switch...case} được sử dụng để tổ chức cài đặt các syscalls theo yêu cầu của đồ án.
+
+\subsection{Tăng program counter}
+\textbf{Mục đích:} Tất cả các syscalls (không phải Halt) sẽ yêu cầu NachOS tăng program counter trước khi syscall trả kết quả về. Nếu không lập trình phần này thì NachOS sẽ rơi vào vòng lặp vô tận, gọi thực hiện syscall này mãi mãi.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Lấy địa chỉ đang lưu trong thanh ghi PC, ghi vào thanh ghi PrevPC.
+\item Lấy địa chỉ kế tiếp (tăng lên 4 bytes) lưu vào thanh ghi PC.
+\item Lấy địa chỉ trong thanh ghi kế tiếp của thanh ghi NextPC lưu vào thanh ghi NextPC.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{int ReadNum()}}
+\textbf{Mục đích:} sử dụng lớp SynchConsoleIn để đọc một số nguyên do người dùng nhập vào.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Chương trình chỉ xử lý trường hợp số nhập vào ở hệ thập phân.
+\item Đọc chuỗi ký tự do người dùng nhập vào.
+\item Kiểm tra dấu của số được nhập.
+\item Nếu có ký tự khác (không phải chữ số) thì trả về 0.
+\item Kiểm tra tràn số, nếu tràn số thì trả ra 0 và dừng.
+\end{itemize}

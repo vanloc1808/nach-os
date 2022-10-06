@@ -2,3 +2,15 @@ usr/*
 NachOS-4.0/c++example/*
 *.o
 *.coff
+*.aux
+*.bcf
+*.lof
+*.log
+*.lot
+*.maf
+*.mtc
+*.mtc0
+*.out
+*.xml
+*.gz
+*.toc
