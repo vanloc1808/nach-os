@@ -1,7 +1,7 @@
-/* readstring.c
+/* randomnum.c
  *	Simple program to test whether the systemcall interface works.
  *	
- *	Just do a readstring syscall that read a string from console.
+ *	Just do a randomnum syscall that make a random number.
  *
  */
 
@@ -9,8 +9,9 @@
 
 int main()
 {
-    char result[1000];
-    ReadString(result, 1000);
+    int t;
+    t = RandomNum();
+    t = RandomNum();
     Halt();
   /* not reached */
 }

@@ -1,7 +1,7 @@
-/* readchar.c
+/* printchar.c
  *	Simple program to test whether the systemcall interface works.
  *	
- *	Just do a add syscall that read a character from console.
+ *	Just do a printchar syscall that print a character to console.
  *
  */
 
