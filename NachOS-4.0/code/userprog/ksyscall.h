@@ -16,6 +16,11 @@
 
 #define MAX_SIZE 1024
 
+#define INT_MAX 2147483647LL
+#define INT_MIN (-INT_MAX - 1)
+char const* overflow_error = "Overflow\n";
+char const* invalid_error = "Invalid\n";
+
 
 void SysHalt()
 {
@@ -47,6 +52,7 @@ void SysPrintChar(char c)
 	out->PutChar(c);
 }
 
+
 void SysReadString(char buffer[], int length)
 {
 	for (int i = 0; i < length; i++) {
@@ -66,6 +72,8 @@ void SysPrintString(char buffer[])
 	}
 }
 
+
+
 //System call read an integer ([-2^32, 2^32 - 1]) in decimal form
 //Return 0 if:
 //+ invalid input. Ex: b44a5	(we do not handle hexadecimal base)
@@ -84,6 +92,11 @@ int SysReadNum()
 		++c;
 	}
 
+	if (len == 0) {
+		SysPrintString((char*) invalid_error);
+		return INT_MIN;
+	}
+
 	bool negative = false;
 	int start = 0;
 
@@ -94,7 +107,7 @@ int SysReadNum()
 
 	for (int i = start; i < len; ++i){
 		if (buffer[i] < '0' || buffer[i] > '9'){
-			SysPrintString("Invalid input...\n");
+			SysPrintString((char*) invalid_error);
 			//SysHalt();
 			return 0;								//invalid input
 		}
@@ -103,10 +116,10 @@ int SysReadNum()
 			//overflow limit: >= 2147483648 = 2^31 or <= -2147483649 = -2^31-1
 			if (number > MAX_INT_DIV_10 || (number == MAX_INT_DIV_10 && buffer[i] > '7')){
 				if (number == MAX_INT_DIV_10 && buffer[i] == '8' && negative){
-					return -2147483648;
+					return INT_MIN;
 				}
 				else{
-					SysPrintString("Overflow...\n");
+					SysPrintString((char*) overflow_error);
 					//SysHalt();
 					return 0;			//overflow
 				}
@@ -139,7 +152,7 @@ void SysPrintNum(int number)
 		numToStr[0] = '0';
 	}
 
-	else if (number == -2147483648){	//-2^31
+	else if (number == INT_MIN){	//-2^31
 		len = 11;
 		numToStr[0] = '-';
 		numToStr[1] = '2';
@@ -178,8 +191,64 @@ void SysPrintNum(int number)
 
 int SysRandomNum()
 {
-	return Random();
+	return rand();
 }
+
+
+
+// --------------------------------------------------------------------
+
+/**
+	function to copy memory from user space to kernel space
+	@param virtualAddress: address of memory
+	@param limit: limit of buffer
+	@return the recorded buffer
+*/
+char* User2System(int virtualAddress, int limit) {
+	// int idx;
+	int oneChar;
+	char* kernelBuffer = NULL;
+
+	kernelBuffer = new char[limit + 1]; // space for "\0"
+
+	if (kernelBuffer == NULL) {
+		return kernelBuffer;
+	}
+
+	memset(kernelBuffer, 0, limit + 1);
+
+	for (int i = 0; i < limit; i++) {
+		kernel->machine->ReadMem(virtualAddress + i, 1, &oneChar);
+		kernelBuffer[i] = (char)oneChar;
+
+		if (oneChar == 0) {
+			break;
+		}
+	}
+
+	return kernelBuffer;
+}
+
+/* 
+ * Input: - User space address (int) 
+ *  - Limit of buffer (int) 
+ *   - Buffer (char[]) 
+ *   Output:- Number of bytes copied (int) 
+ *   Purpose: Copy buffer from System memory space to User memory space 
+ *   */ 
+int System2User(int virtAddr,int len,char* buffer) 
+{ 
+	if (len < 0) return -1; 
+	if (len == 0)return len; 
+	int i = 0; 
+	int oneChar = 0 ; 
+	do { 
+		oneChar= (int) buffer[i]; 
+		kernel->machine->WriteMem(virtAddr+i,1,oneChar); 
+		i++; 
+	} while(i < len && oneChar != 0); 
+	return i; 
+} 
 
 /**
 	input: number at register 4 and 5
@@ -198,14 +267,6 @@ void SystemCallAdd() {
 	kernel->machine->WriteRegister(2, (int)result);
 }
 
-void SystemCallExit() {
-	//DEBUG(dbgSys, "Exit system call.\n");
-	//kernel->systemLock->Release();
-	//kernel->currentThread->Finish();
-}
-
-
-// --------------------------------------------------------------------
 
 void SystemCallReadNum(){
 	DEBUG(dbgSys, "Reading an integer from console...\n");
@@ -233,6 +294,66 @@ void SystemCallRandomNum(){
 
 	DEBUG(dbgSys, "Returned value is " << result << "\n");
 	kernel->machine->WriteRegister(2, result);
+}
+
+void SystemCallReadChar() {
+	int tmp;
+	DEBUG(dbgSys, "\nReading a character from console!");
+	tmp = (int)SysReadChar(); // Convert char to 32 bit int
+	DEBUG(dbgSys, "\nRECEIVE: " << char(tmp) << "\n");
+	// Save result to r2
+	kernel->machine->WriteRegister(2, tmp);
+}
+
+void SystemCallPrintChar() {
+	int tmp;
+	DEBUG(dbgSys, "\nPrinting a character to console!");
+	tmp = kernel->machine->ReadRegister(4);
+	DEBUG(dbgSys, "\nSEND: " << tmp << "\n");
+	SysPrintChar(char(tmp)); 
+}
+
+void SystemCallReadString() {
+	DEBUG(dbgSys, "\nReading a string from console!");
+	int virtualAddr;
+	int length;
+	virtualAddr = kernel->machine->ReadRegister(4);
+	length = kernel->machine->ReadRegister(5);
+
+	// Handle special case!
+	if (length < 0 || length >= MAX_SIZE) {
+		SysPrintString((char*) invalid_error);
+		DEBUG(dbgSys, "\nNegative or too large size!");
+		SysHalt();
+		return;
+	}
+
+	char* buffer = new char[length];
+	SysReadString(buffer, length);
+	DEBUG(dbgSys, "\nSystem received: " << buffer);
+	DEBUG(dbgSys, "\nTransmitting to User space!");
+
+	System2User(virtualAddr, length, buffer);
+	delete[] buffer;
+}
+
+void SystemCallPrintString() {
+	DEBUG(dbgSys, "\nPrinting a string to console!");
+	int virtualAddr;
+	virtualAddr = kernel->machine->ReadRegister(4);
+	char* buffer;
+	bool flag = true;
+	while(flag) {
+		buffer = User2System(virtualAddr, MAX_SIZE);
+		SysPrintString(buffer);
+		// Check end of string!
+		if (buffer[MAX_SIZE - 1] == 0) {
+			DEBUG(dbgSys, "\nEnd!\n");
+			flag = false;
+		}
+		virtualAddr += MAX_SIZE;
+		delete[] buffer;
+	}
 }
 
 // --------------------------------------------------------------------

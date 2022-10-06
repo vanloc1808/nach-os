@@ -229,7 +229,7 @@ PrintNum:
 
 	.globl RandomNum
 	.ent RandomNum
-PrintNum:
+RandomNum:
 	addiu $2,$0, SC_RandomNum
 	syscall
 	j	$31

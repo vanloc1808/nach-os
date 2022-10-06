@@ -1,7 +1,7 @@
-/* readstring.c
+/* printnum.c
  *	Simple program to test whether the systemcall interface works.
  *	
- *	Just do a readstring syscall that read a string from console.
+ *	Just do a printnum syscall that print a print to console.
  *
  */
 
@@ -9,8 +9,10 @@
 
 int main()
 {
-    char result[1000];
-    ReadString(result, 1000);
+    int x = 1234;
+    int y = -2234;
+    PrintNum(x);
+    PrintNum(y);
     Halt();
   /* not reached */
 }

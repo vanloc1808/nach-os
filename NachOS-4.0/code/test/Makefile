@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add halt readchar printchar printstring readstring # sort
+PROGRAMS = add halt readchar printchar printstring readstring readnum printnum randomnum help sort ascii
 endif
 
 all: $(PROGRAMS)
@@ -133,30 +133,6 @@ add: add.o start.o
 	$(LD) $(LDFLAGS) start.o add.o -o add.coff
 	$(COFF2NOFF) add.coff add
 
-shell.o: shell.c
-	$(CC) $(CFLAGS) -c shell.c
-shell: shell.o start.o
-	$(LD) $(LDFLAGS) start.o shell.o -o shell.coff
-	$(COFF2NOFF) shell.coff shell
-
-sort.o: sort.c
-	$(CC) $(CFLAGS) -c sort.c
-sort: sort.o start.o
-	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
-	$(COFF2NOFF) sort.coff sort
-
-segments.o: segments.c
-	$(CC) $(CFLAGS) -c segments.c
-segments: segments.o start.o
-	$(LD) $(LDFLAGS) start.o segments.o -o segments.coff
-	$(COFF2NOFF) segments.coff segments
-
-matmult.o: matmult.c
-	$(CC) $(CFLAGS) -c matmult.c
-matmult: matmult.o start.o
-	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
-	$(COFF2NOFF) matmult.coff matmult
-
 clean:
 	$(RM) -f *.o *.ii
 	$(RM) -f *.coff
@@ -171,6 +147,7 @@ unknownhost:
 	@echo Otherwise, edit Makefile.dep and try again.
 
 # --------------------------------------
+#
 readchar.o: readchar.c
 	$(CC) $(CFLAGS) -c readchar.c
 
@@ -185,13 +162,6 @@ printchar: printchar.o start.o
 	$(LD) $(LDFLAGS) start.o printchar.o -o printchar.coff
 	$(COFF2NOFF) printchar.coff printchar
 
-sort.o: sort.c
-	$(CC) $(CFLAGS) -c sort.c
-
-sort: sort.o start.o
-	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
-	$(COFF2NOFF) sort.coff sort
-
 printstring.o: printstring.c
 	$(CC) $(CFLAGS) -c printstring.c
 
@@ -205,4 +175,44 @@ readstring.o: readstring.c
 readstring: readstring.o start.o
 	$(LD) $(LDFLAGS) start.o readstring.o -o readstring.coff
 	$(COFF2NOFF) readstring.coff readstring
+
+printnum.o: printnum.c
+	$(CC) $(CFLAGS) -c printnum.c
+
+printnum: printnum.o start.o
+	$(LD) $(LDFLAGS) start.o printnum.o -o printnum.coff
+	$(COFF2NOFF) printnum.coff printnum
+
+readnum.o: readnum.c
+	$(CC) $(CFLAGS) -c readnum.c
+
+readnum: readnum.o start.o
+	$(LD) $(LDFLAGS) start.o readnum.o -o readnum.coff
+	$(COFF2NOFF) readnum.coff readnum
+
+randomnum.o: randomnum.c
+	$(CC) $(CFLAGS) -c randomnum.c
+
+randomnum: randomnum.o start.o
+	$(LD) $(LDFLAGS) start.o randomnum.o -o randomnum.coff
+	$(COFF2NOFF) randomnum.coff randomnum
+
+sort.o: sort.c
+	$(CC) $(CFLAGS) -c sort.c
+sort: sort.o start.o
+	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
+	$(COFF2NOFF) sort.coff sort
+
+help.o: help.c
+	$(CC) $(CFLAGS) -c help.c
+help: help.o start.o
+	$(LD) $(LDFLAGS) start.o help.o -o help.coff
+	$(COFF2NOFF) help.coff help
+
+ascii.o: ascii.c
+	$(CC) $(CFLAGS) -c ascii.c
+ascii: ascii.o start.o
+	$(LD) $(LDFLAGS) start.o ascii.o -o ascii.coff
+	$(COFF2NOFF) ascii.coff ascii
+
 # --------------------------------------
