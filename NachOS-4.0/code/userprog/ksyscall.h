@@ -58,6 +58,7 @@ void SysReadString(char buffer[], int length)
 	for (int i = 0; i < length; i++) {
 		buffer[i] = SysReadChar();
 		if (buffer[i] == '\x00' || buffer[i] == '\n') {
+			buffer[i] = 0;
 			break;
 		}
 	}
