@@ -9,6 +9,11 @@ int main() {
         PrintChar(c);
 
         PrintChar('\n');
+
+        if (c == (unsigned char)255) {
+            break;
+        }
+
         c++;
     }
 

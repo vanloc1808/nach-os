@@ -69,93 +69,140 @@ void ExceptionHandler(ExceptionType which) {
 
     switch (which) {
 	case NoException:
+		kernel->interrupt->setStatus(SystemMode);
+		DEBUG(dbgSys, "Switch to system mode\n");
 		return;
    	case SyscallException:
     		switch(type) {
-		case SC_Halt: {
-			// input: no
-			// output: halt (shutdown) the system
-			DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
-			SysHalt();
-			ASSERTNOTREACHED(); 
-			break;
-		}
-		case SC_Add: {
-			SystemCallAdd();			
-			/* Modify return point */
-			ProcessPCRegister();
-			return; 
-			//ASSERTNOTREACHED();
-			break;
-		}
+			case SC_Exit: {
+				ProcessPCRegister();
+			}
+			case SC_Exec: {
+				ProcessPCRegister();
+			}
+			case SC_Join: {
+				ProcessPCRegister();
+			}
+			case SC_Create: {
+				ProcessPCRegister();
+			}
+			case SC_Remove: {
+				ProcessPCRegister();
+			}
+			case SC_Open: {
+				ProcessPCRegister();
+			}
+			case SC_Read: {
+				ProcessPCRegister();
+			}
+			case SC_Write: {
+				ProcessPCRegister();
+			}
+			case SC_Seek: {
+				ProcessPCRegister();
+			}
+			case SC_Close: {
+				ProcessPCRegister();
+			}
+			case SC_ThreadFork: {
+				ProcessPCRegister();
+			}
+			case SC_ThreadYield: {
+				ProcessPCRegister();
+			}
+			case SC_ExecV: {
+				ProcessPCRegister();
+			}
+			case SC_ThreadExit: {
+				ProcessPCRegister();
+			}
+			case SC_ThreadJoin: {
+				ProcessPCRegister();
+			}
+			case SC_Halt: {
+				// input: no
+				// output: halt (shutdown) the system
+				DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
+				SysHalt();
+				ASSERTNOTREACHED(); 
+				break;
+			}
+			case SC_Add: {
+				SystemCallAdd();			
+				/* Modify return point */
+				ProcessPCRegister();
+				return; 
+				//ASSERTNOTREACHED();
+				break;
+			}
 
-
-	// ---------------------------------------
-
-		case SC_ReadChar: {
-			SystemCallReadChar();
-			ProcessPCRegister();
-			return;
-			//ASSERTNOTREACHED();
-			break;
-		}
-
-		case SC_PrintChar: {
-			SystemCallPrintChar();
-			ProcessPCRegister();
-			return;
-			//ASSERTNOTREACHED();
-
-			break;
-		}
-
-		case SC_ReadString: {
-			SystemCallReadString();
-			ProcessPCRegister();
-			
-			return;
-			break;
-		}
-
-		case SC_PrintString: {
-			SystemCallPrintString();
-			ProcessPCRegister();
-			
-			return;
-			break;
-		}
-
-		case SC_ReadNum:
-		{
-			SystemCallReadNum();			
-			ProcessPCRegister();
-			return;
-			//ASSERTNOTREACHED();
-			break;
-		}
-
-		case SC_PrintNum:
-		{
-			SystemCallPrintNum();
-			ProcessPCRegister();
-			return;
-			//ASSERTNOTREACHED();
-			break;
-		}
-
-		case SC_RandomNum:
-		{
-			SystemCallRandomNum();
-			ProcessPCRegister();
-			return;
-			//ASSERTNOTREACHED();
-			break;
-		}
 
 		// ---------------------------------------
-		default:
-			cerr << "Unexpected system call " << type << "\n";
-			break;
+
+			case SC_ReadChar: {
+				SystemCallReadChar();
+				ProcessPCRegister();
+				return;
+				//ASSERTNOTREACHED();
+				break;
+			}
+
+			case SC_PrintChar: {
+				SystemCallPrintChar();
+				ProcessPCRegister();
+				return;
+				//ASSERTNOTREACHED();
+
+				break;
+			}
+
+			case SC_ReadString: {
+				SystemCallReadString();
+				ProcessPCRegister();
+				
+				return;
+				break;
+			}
+
+			case SC_PrintString: {
+				SystemCallPrintString();
+				ProcessPCRegister();
+				
+				return;
+				break;
+			}
+
+			case SC_ReadNum:
+			{
+				SystemCallReadNum();			
+				ProcessPCRegister();
+				return;
+				//ASSERTNOTREACHED();
+				break;
+			}
+
+			case SC_PrintNum:
+			{
+				SystemCallPrintNum();
+				ProcessPCRegister();
+				return;
+				//ASSERTNOTREACHED();
+				break;
+			}
+
+			case SC_RandomNum:
+			{
+				SystemCallRandomNum();
+				ProcessPCRegister();
+				return;
+				//ASSERTNOTREACHED();
+				break;
+			}
+
+			// ---------------------------------------
+			default:
+				cerr << "Unexpected system call " << type << "\n";
+				break;
       		}
       		break;
 	case PageFaultException:
