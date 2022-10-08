@@ -7,7 +7,7 @@ Trong tập tin \textit{/code/userprog/exception.cc}, dùng cấu trúc \textbf{
 Cấu trúc \textbf{switch...case} được sử dụng để tổ chức cài đặt các syscalls theo yêu cầu của đồ án.
 
 \subsection{Tăng program counter}
-\textbf{Mục đích:} Tất cả các syscalls (không phải Halt) sẽ yêu cầu NachOS tăng program counter trước khi syscall trả kết quả về. Nếu không lập trình phần này thì NachOS sẽ rơi vào vòng lặp vô tận, gọi thực hiện syscall này mãi mãi.\\
+\textbf{Chức năng:} Tất cả các syscalls (không phải Halt) sẽ yêu cầu NachOS tăng program counter trước khi syscall trả kết quả về. Nếu không lập trình phần này thì NachOS sẽ rơi vào vòng lặp vô tận, gọi thực hiện syscall này mãi mãi.\\
 \textbf{Cách thức thực hiện:}
 \begin{itemize}
 \item Lấy địa chỉ đang lưu trong thanh ghi PC, ghi vào thanh ghi PrevPC.
@@ -16,7 +16,7 @@ Cấu trúc \textbf{switch...case} được sử dụng để tổ chức cài �
 \end{itemize}
 
 \subsection{Cài đặt syscall \textit{int ReadNum()}}
-\textbf{Mục đích:} sử dụng lớp SynchConsoleIn để đọc một số nguyên do người dùng nhập vào.\\
+\textbf{Chức năng:} sử dụng lớp SynchConsoleInput để đọc một số nguyên do người dùng nhập vào.\\
 \textbf{Cách thức thực hiện:}
 \begin{itemize}
 \item Chương trình chỉ xử lý trường hợp số nhập vào ở hệ thập phân.
@@ -24,4 +24,52 @@ Cấu trúc \textbf{switch...case} được sử dụng để tổ chức cài �
 \item Kiểm tra dấu của số được nhập.
 \item Nếu có ký tự khác (không phải chữ số) thì trả về 0.
 \item Kiểm tra tràn số, nếu tràn số thì trả ra 0 và dừng.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{void PrintNum(int number)}}
+\textbf{Chức năng:} sử dụng lớp SynchConsoleOutput để xuất một số nguyên ra màn hình.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Đọc giá trị \textit{number} từ thanh ghi r4.
+\item Kiểm tra giá trị number so sánh với \textit{INT$\_$MIN}, so sánh với 0 rồi xử lý các trường hợp này.
+\item Kiểm tra số âm.
+\item Tìm số lượng chữ số của \textit{number}.
+\item Lần lượt chèn các ký tự tương ứng với các chữ số của \textit{number} vào string \textit{output}.
+\item Xuất string ra màn hình bằng cách gọi system call \textit{PrintString}.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{char ReadChar()}}
+\textbf{Chức năng:} sử dụng lớp SynchConsoleInput để đọc một ký tự do người dùng nhập vào.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Sử dụng hàm \textit{GetChar()} của lớp \textit{SynchConsoleInput.}
+\item Chuyển ký tự sang giá trị nguyên 32 bits.
+\item Lưu giá trị đó vào thanh ghi r2.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{void PrintChar(char character)}}
+\textbf{Chức năng:} sử dụng lớp SynchConsoleOutput để xuất một ký tự ra màn hình.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Đọc giá trị \textit{character} từ thanh ghi r4.
+\item Sử dụng hàm \textit{PutChar()} của lớp \textit{SynchConsoleOutput} để in ký tự ra màn hình.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{void ReadString(char buffer[], int length)}}
+\textbf{Chức năng:} đọc một chuỗi ký tự do người dùng nhập vào.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Đọc địa chỉ của \textit{buffer} từ thanh ghi r4.
+\item Đọc giá trị \textit{length} từ thanh ghi r5.
+\item Kiểm tra tính hợp lệ của giá trị \textit{length}.
+\item Nếu \textit{length} hợp lệ, tạo một chuỗi ký tự có độ dài \textit{length} trên kernel space. Lần lượt đọc các ký tự bằng syscall \textit{ReadChar}, nếu đọc thất bại thì dừng.
+\item Sử dụng hàm \textit{System2User} để copy vùng nhớ có độ dài \textit{length} từ kernel space sang user space.
+\end{itemize}
+
+\subsection{Cài đặt syscall \textit{void PrintString(char buffer[])}}
+\textbf{Chức năng:} in một chuỗi ký tự ra màn hình.\\
+\textbf{Cách thức thực hiện:}
+\begin{itemize}
+\item Đọc địa chỉ của \textit{buffer} từ thanh ghi r4.
+\item Bằng hàm \textit{User2System}, copy vùng nhớ từ user space sang kernel space với độ dài tối đa 1024 mỗi lần, rồi gọi syscall \textit{PrintChar} cho từng ký tự.
 \end{itemize}
