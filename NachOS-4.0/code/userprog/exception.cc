@@ -84,7 +84,10 @@ void ExceptionHandler(ExceptionType which) {
 				ProcessPCRegister();
 			}
 			case SC_Create: {
+				SystemCallCreate();
 				ProcessPCRegister();
+				return;
+				break;
 			}
 			case SC_Remove: {
 				ProcessPCRegister();
