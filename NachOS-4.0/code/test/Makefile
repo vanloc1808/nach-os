@@ -216,3 +216,8 @@ ascii: ascii.o start.o
 	$(COFF2NOFF) ascii.coff ascii
 
 # --------------------------------------
+createfile.o: createfile.c
+	$(CC) $(CFLAGS) -c createfile.c
+createfile: createfile.o start.o
+	$(LD) $(LDFLAGS) start.o createfile.o -o createfile.coff
+	$(COFF2NOFF) createfile.coff createfile
