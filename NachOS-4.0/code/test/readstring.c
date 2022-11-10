@@ -11,6 +11,7 @@ int main()
 {
     char result[1000];
     ReadString(result, 1000);
+    PrintString(result);
     Halt();
   /* not reached */
 }

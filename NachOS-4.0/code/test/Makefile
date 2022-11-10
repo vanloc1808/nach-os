@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add halt readchar printchar printstring readstring readnum printnum randomnum help sort ascii
+PROGRAMS = add halt readchar printchar printstring readstring readnum printnum randomnum help sort ascii createfile
 endif
 
 all: $(PROGRAMS)
