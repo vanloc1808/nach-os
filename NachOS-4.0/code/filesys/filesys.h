@@ -44,7 +44,7 @@ class FileSystem {
   public:
     FileSystem() {}
 
-    bool Create(char *name) {
+    bool Create(char *name, int initializeState) { //https://users.cs.duke.edu/~narten/110/nachos/main/node24.html
 	int fileDescriptor = OpenForWrite(name);
 
 	if (fileDescriptor == -1) return FALSE;
