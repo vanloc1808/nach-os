@@ -209,6 +209,20 @@ void SysCreate(char* name) {
 	return;
 } 
 
+void SysRemove(char* name) {
+	if ((name == NULL) || strlen(name) == 0) {
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	}
+
+	if (kernel->fileSystem->Remove(name)) {
+		kernel->machine->WriteRegister(2, 0);
+	} else {
+		kernel->machine->WriteRegister(2, -1);
+	}
+	return;
+}
+
 
 // --------------------------------------------------------------------
 
@@ -378,6 +392,17 @@ void SystemCallCreate() {
 	tempWrite = User2System(bufferWrite, MAX_SIZE);
 	
 	SysCreate(tempWrite);
+	delete[] tempWrite;
+}
+
+void SystemCallRemove() {
+	int bufferWrite;
+	char* tempWrite;
+	bufferWrite = kernel->machine->ReadRegister(4);
+
+	tempWrite = User2System(bufferWrite, MAX_SIZE);
+
+	SysRemove(tempWrite);
 	delete[] tempWrite;
 }
 

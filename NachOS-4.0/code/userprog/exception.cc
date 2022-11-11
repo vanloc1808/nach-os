@@ -90,7 +90,10 @@ void ExceptionHandler(ExceptionType which) {
 				break;
 			}
 			case SC_Remove: {
+				SystemCallRemove();
 				ProcessPCRegister();
+				return;
+				break;
 			}
 			case SC_Open: {
 				ProcessPCRegister();
