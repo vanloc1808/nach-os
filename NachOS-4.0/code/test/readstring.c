@@ -10,6 +10,7 @@
 int main()
 {
     char result[1000];
+    PrintString("Helloooo\n");
     ReadString(result, 1000);
     PrintString(result);
     Halt();
