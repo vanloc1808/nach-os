@@ -1,0 +1,6 @@
+cd build.linux
+make depend
+make
+cd ../test
+make
+../build.linux/nachos -x createfile
