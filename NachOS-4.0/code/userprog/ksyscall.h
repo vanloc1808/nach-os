@@ -224,15 +224,37 @@ void SysRemove(char* name) {
 }
 
 
+int SysRead(char* buffer, int length, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Read(buffer, length);
+	delete of;
+	return value;
+}
+
+int SysWrite(char* buffer, int length, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Write(buffer, length);
+	delete of;
+	return value;
+}
+
+int SysSeek(int position, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Seek(position);
+	delete of;
+	return value;
+}
+
 // --------------------------------------------------------------------
 
 /**
 	function to copy memory from user space to kernel space
 	@param virtualAddress: address of memory
 	@param limit: limit of buffer
+	@param keepNULL: keep null byte or not (for string)
 	@return the recorded buffer
 */
-char* User2System(int virtualAddress, int limit) {
+char* User2System(int virtualAddress, int limit, int keepNULL = 0) {
 	// int idx;
 	int oneChar;
 	char* kernelBuffer = NULL;
@@ -249,7 +271,7 @@ char* User2System(int virtualAddress, int limit) {
 		kernel->machine->ReadMem(virtualAddress + i, 1, &oneChar);
 		kernelBuffer[i] = (char)oneChar;
 
-		if (oneChar == 0) {
+		if (oneChar == 0 && !keepNULL) { // Accept null bytes to be read
 			break;
 		}
 	}
@@ -261,10 +283,11 @@ char* User2System(int virtualAddress, int limit) {
  * Input: - User space address (int) 
  *  - Limit of buffer (int) 
  *   - Buffer (char[]) 
+ * 	- keepNULL: keep null byte or not (for string)
  *   Output:- Number of bytes copied (int) 
  *   Purpose: Copy buffer from System memory space to User memory space 
  *   */ 
-int System2User(int virtAddr,int len,char* buffer) 
+int System2User(int virtAddr,int len,char* buffer, int keepNULL = 0) 
 { 
 	if (len < 0) return -1; 
 	if (len == 0)return len; 
@@ -274,7 +297,7 @@ int System2User(int virtAddr,int len,char* buffer)
 		oneChar= (int) buffer[i]; 
 		kernel->machine->WriteMem(virtAddr+i,1,oneChar); 
 		i++; 
-	} while(i < len && oneChar != 0); 
+	} while(i < len && (oneChar != 0 || keepNULL));  // accept NULL bytes to be written!
 	return i; 
 } 
 
@@ -404,6 +427,84 @@ void SystemCallRemove() {
 
 	SysRemove(tempWrite);
 	delete[] tempWrite;
+}
+
+void SystemCallRead() {
+	DEBUG(dbgSys, "\n Reading file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+
+	char* buffer = new char[length];
+	if (buffer == NULL || fd == 1 || fd < 0) {
+		SysPrintString((char*) invalid_error); // Todo: better error comment
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 0) { // Handle console
+		SynchConsoleInput* inp = (SynchConsoleInput*)kernel->synchConsoleIn;
+		int i = 0;
+		while (i < length) {
+			buffer[i] = inp->GetChar();
+			if (buffer[i] == EOF) { // End of read
+				buffer[i] = 0;
+				break;
+			}
+			i++;
+		}
+		System2User(virtAddr, i, buffer, 1);
+		kernel->machine->WriteRegister(2, i);
+	} else {
+		int result = SysRead(buffer, length, fd);
+
+		// System to User space
+		if (result != -1)
+			System2User(virtAddr, result, buffer);
+
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallWrite() {
+	DEBUG(dbgSys, "\n Writing file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+
+	// User to System space
+	char* buffer = User2System(virtAddr, length, 1);
+
+	if (buffer == NULL || fd <= 0) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 1) { // Handle console
+		SynchConsoleOutput* out = (SynchConsoleOutput*)kernel->synchConsoleOut;
+		for (int i = 0; i < length; i++) {
+			out->PutChar(buffer[i]);
+		}
+		kernel->machine->WriteRegister(2, length); // Todo: suppose writing to console alway perfect!
+	} else {
+		int result = SysWrite(buffer, length, fd);
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallSeek() {
+	DEBUG(dbgSys, "\n Seek file");
+	int position = kernel->machine->ReadRegister(4);
+	int fd = kernel->machine->ReadRegister(5);
+
+	// Handle fd 0|1
+	if (fd < 2) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	}
+
+	int result = SysSeek(position, fd);
+	kernel->machine->WriteRegister(2, result);
 }
 
 // --------------------------------------------------------------------

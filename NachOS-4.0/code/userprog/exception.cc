@@ -99,13 +99,19 @@ void ExceptionHandler(ExceptionType which) {
 				ProcessPCRegister();
 			}
 			case SC_Read: {
+				SystemCallRead();
 				ProcessPCRegister();
+				return; break;
 			}
 			case SC_Write: {
+				SystemCallWrite();
 				ProcessPCRegister();
+				return; break;
 			}
 			case SC_Seek: {
+				SystemCallSeek();
 				ProcessPCRegister();
+				return; break;
 			}
 			case SC_Close: {
 				ProcessPCRegister();
