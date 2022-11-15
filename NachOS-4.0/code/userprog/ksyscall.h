@@ -251,9 +251,10 @@ int SysSeek(int position, int fd) {
 	function to copy memory from user space to kernel space
 	@param virtualAddress: address of memory
 	@param limit: limit of buffer
+	@param keepNULL: keep null byte or not (for string)
 	@return the recorded buffer
 */
-char* User2System(int virtualAddress, int limit) {
+char* User2System(int virtualAddress, int limit, int keepNULL = 0) {
 	// int idx;
 	int oneChar;
 	char* kernelBuffer = NULL;
@@ -270,9 +271,9 @@ char* User2System(int virtualAddress, int limit) {
 		kernel->machine->ReadMem(virtualAddress + i, 1, &oneChar);
 		kernelBuffer[i] = (char)oneChar;
 
-		// if (oneChar == 0) { // accept NULL bytes to be written!
-		// 	break;
-		// }
+		if (oneChar == 0 && !keepNULL) { // Accept null bytes to be read
+			break;
+		}
 	}
 
 	return kernelBuffer;
@@ -282,10 +283,11 @@ char* User2System(int virtualAddress, int limit) {
  * Input: - User space address (int) 
  *  - Limit of buffer (int) 
  *   - Buffer (char[]) 
+ * 	- keepNULL: keep null byte or not (for string)
  *   Output:- Number of bytes copied (int) 
  *   Purpose: Copy buffer from System memory space to User memory space 
  *   */ 
-int System2User(int virtAddr,int len,char* buffer) 
+int System2User(int virtAddr,int len,char* buffer, int keepNULL = 0) 
 { 
 	if (len < 0) return -1; 
 	if (len == 0)return len; 
@@ -295,7 +297,7 @@ int System2User(int virtAddr,int len,char* buffer)
 		oneChar= (int) buffer[i]; 
 		kernel->machine->WriteMem(virtAddr+i,1,oneChar); 
 		i++; 
-	} while(i < len /*&& oneChar != 0*/);  // accept NULL bytes to be written!
+	} while(i < len && (oneChar != 0 || keepNULL));  // accept NULL bytes to be written!
 	return i; 
 } 
 
@@ -449,7 +451,7 @@ void SystemCallRead() {
 			}
 			i++;
 		}
-		System2User(virtAddr, i, buffer);
+		System2User(virtAddr, i, buffer, 1);
 		kernel->machine->WriteRegister(2, i);
 	} else {
 		int result = SysRead(buffer, length, fd);
@@ -470,7 +472,7 @@ void SystemCallWrite() {
 	int fd = kernel->machine->ReadRegister(6);
 
 	// User to System space
-	char* buffer = User2System(virtAddr, length);
+	char* buffer = User2System(virtAddr, length, 1);
 
 	if (buffer == NULL || fd <= 0) {
 		SysPrintString((char*) invalid_error);
