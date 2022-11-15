@@ -224,6 +224,27 @@ void SysRemove(char* name) {
 }
 
 
+int SysRead(char* buffer, int length, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Read(buffer, length);
+	delete of;
+	return value;
+}
+
+int SysWrite(char* buffer, int length, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Write(buffer, length);
+	delete of;
+	return value;
+}
+
+int SysSeek(int position, int fd) {
+	OpenFile* of = new OpenFile(fd);
+	int value = of->Seek(position);
+	delete of;
+	return value;
+}
+
 // --------------------------------------------------------------------
 
 /**
@@ -249,9 +270,9 @@ char* User2System(int virtualAddress, int limit) {
 		kernel->machine->ReadMem(virtualAddress + i, 1, &oneChar);
 		kernelBuffer[i] = (char)oneChar;
 
-		if (oneChar == 0) {
-			break;
-		}
+		// if (oneChar == 0) { // accept NULL bytes to be written!
+		// 	break;
+		// }
 	}
 
 	return kernelBuffer;
@@ -274,7 +295,7 @@ int System2User(int virtAddr,int len,char* buffer)
 		oneChar= (int) buffer[i]; 
 		kernel->machine->WriteMem(virtAddr+i,1,oneChar); 
 		i++; 
-	} while(i < len && oneChar != 0); 
+	} while(i < len /*&& oneChar != 0*/);  // accept NULL bytes to be written!
 	return i; 
 } 
 
@@ -404,6 +425,84 @@ void SystemCallRemove() {
 
 	SysRemove(tempWrite);
 	delete[] tempWrite;
+}
+
+void SystemCallRead() {
+	DEBUG(dbgSys, "\n Reading file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+
+	char* buffer = new char[length];
+	if (buffer == NULL || fd == 1 || fd < 0) {
+		SysPrintString((char*) invalid_error); // Todo: better error comment
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 0) { // Handle console
+		SynchConsoleInput* inp = (SynchConsoleInput*)kernel->synchConsoleIn;
+		int i = 0;
+		while (i < length) {
+			buffer[i] = inp->GetChar();
+			if (buffer[i] == EOF) { // End of read
+				buffer[i] = 0;
+				break;
+			}
+			i++;
+		}
+		System2User(virtAddr, i, buffer);
+		kernel->machine->WriteRegister(2, i);
+	} else {
+		int result = SysRead(buffer, length, fd);
+
+		// System to User space
+		if (result != -1)
+			System2User(virtAddr, result, buffer);
+
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallWrite() {
+	DEBUG(dbgSys, "\n Writing file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+
+	// User to System space
+	char* buffer = User2System(virtAddr, length);
+
+	if (buffer == NULL || fd <= 0) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 1) { // Handle console
+		SynchConsoleOutput* out = (SynchConsoleOutput*)kernel->synchConsoleOut;
+		for (int i = 0; i < length; i++) {
+			out->PutChar(buffer[i]);
+		}
+		kernel->machine->WriteRegister(2, length); // Todo: suppose writing to console alway perfect!
+	} else {
+		int result = SysWrite(buffer, length, fd);
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallSeek() {
+	DEBUG(dbgSys, "\n Seek file");
+	int position = kernel->machine->ReadRegister(4);
+	int fd = kernel->machine->ReadRegister(5);
+
+	// Handle fd 0|1
+	if (fd < 2) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	}
+
+	int result = SysSeek(position, fd);
+	kernel->machine->WriteRegister(2, result);
 }
 
 // --------------------------------------------------------------------
