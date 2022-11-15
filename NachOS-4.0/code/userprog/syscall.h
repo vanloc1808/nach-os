@@ -49,6 +49,8 @@
 #define SC_RandomNum    72
 
 // ----------------------------------------------
+#define SC_OpenFileID   96
+#define SC_CloseFile    100
 
 #ifndef IN_ASM
 
