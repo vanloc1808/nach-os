@@ -7,6 +7,7 @@ int main() {
     int count;
     int fd1;
     int fd2;
+    int pos;
 
     PrintString("Filepath 1: ");
     ReadString(filePath1, 255); // Read from console!
@@ -16,16 +17,13 @@ int main() {
     ReadString(filePath2, 255); // Read from console!
     filePath2[255] = 0; // Nullbyte for last char
 
-    fd1 = Open(filePath1, 0);
+    fd1 = Open(filePath1, 1); // Write to end of file 1
+    pos = Seek(-1, fd1);
     fd2 = Open(filePath2, 0);
-    if (fd1 != -1 && fd2 != -1) {
-        
-        while ((count = Read(buffer, 256, fd1)) > 0) {
-            Write(buffer, count, 1);
-        }
+    if (fd1 != -1 && fd2 != -1 && pos != -1) {
 
         while ((count = Read(buffer, 256, fd2)) > 0) {
-            Write(buffer, count, 1);
+            Write(buffer, count, fd1);
         }
 
         Close(fd1);

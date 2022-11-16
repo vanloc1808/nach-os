@@ -250,7 +250,6 @@ int SysSeek(int position, int fd) {
 	OpenFile* of = kernel->fileSystem->get(fd);
 	if (of == NULL) return -1;
 	int value = of->Seek(position);
-	delete of;
 	return value;
 }
 
