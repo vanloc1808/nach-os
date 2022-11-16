@@ -36,13 +36,22 @@
 #include "copyright.h"
 #include "sysdep.h"
 #include "openfile.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 #ifdef FILESYS_STUB 		// Temporarily implement file system calls as 
 				// calls to UNIX, until the real file system
 				// implementation is available
 class FileSystem {
   public:
-    FileSystem() {}
+    FileSystem() { 
+		fdTable = new int[20]; 
+		fdTable[0] = 0; 
+		fdTable[1] = 1;
+		for (int i = 2; i < 20; i++) {
+			fdTable[i] = -1;
+		}
+	}
 
     bool Create(char *name, int initializeState) { //https://users.cs.duke.edu/~narten/110/nachos/main/node24.html
 	int fileDescriptor = OpenForWrite(name);
@@ -61,6 +70,54 @@ class FileSystem {
 
     bool Remove(char *name) { return Unlink(name) == 0; }
 
+	int Open(char* name, int accessType) { // Based on lib/sysdep.cc
+		if (accessType == 0) { // read only
+			int fd = open(name, O_RDONLY);
+			if (fd == -1) return -1;
+
+			for (int i = 2; i < 20; i++) {
+				if (fdTable[i] == -1) {
+					fdTable[i] = fd;
+					return fd;
+				}
+			}
+
+			// No slot for fd -> close and return error
+			Close(fd);
+			return -1;
+
+		} else if (accessType == 1) { // read & write
+			int fd = open(name, O_RDWR | O_CREAT, 0666);
+			if (fd == -1) return -1;
+
+			for (int i = 2; i < 20; i++) {
+				if (fdTable[i] == -1) {
+					fdTable[i] = fd;
+					return fd;
+				}
+			}
+
+			// No slot for fd -> close and return error
+			Close(fd);
+			return -1;
+		} else {
+			return -1;
+		}
+	}
+
+	int Close(int fd) {
+		for (int i = 2; i < 20; i++) {
+			if (fdTable[i] == fd) {
+				fdTable[i] = -1;
+				return close(fd);
+			}
+		}
+		return -1;
+	}
+
+	~FileSystem() { delete[] fdTable; }
+  private:
+	int* fdTable;
 };
 
 #else // FILESYS

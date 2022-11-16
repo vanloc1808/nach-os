@@ -6,6 +6,9 @@ int main() {
     char buffer[1024];
     int count;
 
+    int fd1;
+    int fd2;
+
     PrintString("Source: ");
     ReadString(filePath1, 255); // Read from console!
     filePath1[255] = 0; // Nullbyte for last char
@@ -14,8 +17,8 @@ int main() {
     ReadString(filePath2, 255); // Read from console!
     filePath2[255] = 0; // Nullbyte for last char
 
-    int fd1 = Open(filePath1, 0);
-    int fd2 = Open(filePath2, 1);
+    fd1 = Open(filePath1, 0);
+    fd2 = Open(filePath2, 1);
     if (fd1 != -1 && fd2 != -1) {
         
         while (count = Read(buffer, 1024, fd1) > 0) {

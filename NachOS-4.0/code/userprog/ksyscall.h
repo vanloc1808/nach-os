@@ -245,6 +245,14 @@ int SysSeek(int position, int fd) {
 	return value;
 }
 
+int SysOpen(char* fileName, int accessType) {
+	return kernel->fileSystem->Open(fileName, accessType);
+}
+
+int SysClose(int fd) {
+	return kernel->fileSystem->Close(fd);
+}
+
 // --------------------------------------------------------------------
 
 /**
@@ -470,7 +478,7 @@ void SystemCallWrite() {
 	int virtAddr = kernel->machine->ReadRegister(4);
 	int length = kernel->machine->ReadRegister(5);
 	int fd = kernel->machine->ReadRegister(6);
-
+	
 	// User to System space
 	char* buffer = User2System(virtAddr, length, 1);
 
@@ -504,6 +512,27 @@ void SystemCallSeek() {
 	}
 
 	int result = SysSeek(position, fd);
+	kernel->machine->WriteRegister(2, result);
+}
+
+void SystemCallOpen() {
+	DEBUG(dbgSys, "\n Open file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int accessType = kernel->machine->ReadRegister(5);
+
+	char* buffer = User2System(virtAddr, MAX_SIZE);
+
+	int result = SysOpen(buffer, accessType);
+
+	kernel->machine->WriteRegister(2, result);
+
+	delete[] buffer;
+}
+
+void SystemCallClose() {
+	DEBUG(dbgSys, "\n Close file");
+	int fd = kernel->machine->ReadRegister(4);
+	int result = SysClose(fd);
 	kernel->machine->WriteRegister(2, result);
 }
 

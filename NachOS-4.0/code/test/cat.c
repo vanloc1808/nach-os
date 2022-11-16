@@ -2,8 +2,9 @@
 
 int main() {
     char filePath[256];
-    char buffer[1024];
+    char buffer[256];
     int count = 0;
+    int fd = -1;
     PrintString("Filepath: ");
     
     ReadString(filePath, 255); // Read from console!
@@ -11,10 +12,11 @@ int main() {
     // PrintString(filePath);
     // PrintChar('\n');
 
-    int fd = Open(filePath, 0);
+    fd = Open(filePath, 0);
+    
     if (fd != -1) {
-        
-        while (count = Read(buffer, 1024, fd) > 0) {
+        // PrintString(buffer);
+        while (count = Read(buffer, 256, fd) > 0) {
             Write(buffer, count, 1);
         }
 

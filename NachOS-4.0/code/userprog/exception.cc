@@ -96,7 +96,10 @@ void ExceptionHandler(ExceptionType which) {
 				break;
 			}
 			case SC_Open: {
+				SystemCallOpen();
 				ProcessPCRegister();
+				return;
+				break;
 			}
 			case SC_Read: {
 				SystemCallRead();
@@ -114,7 +117,10 @@ void ExceptionHandler(ExceptionType which) {
 				return; break;
 			}
 			case SC_Close: {
+				SystemCallClose();
 				ProcessPCRegister();
+				return;
+				break;
 			}
 			case SC_ThreadFork: {
 				ProcessPCRegister();
