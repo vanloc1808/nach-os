@@ -23,6 +23,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "sysdep.h"
+#include <fcntl.h>
 
 #ifdef FILESYS_STUB			// Temporarily implement calls to 
 					// Nachos file system as calls to UNIX!
@@ -65,6 +66,19 @@ class OpenFile {
 		} else {
 			return -1;
 		}
+	}
+
+
+	// https://stackoverflow.com/questions/63050749/how-to-get-flags-of-opened-fd-in-c
+	// https://codebrowser.dev/glibc/glibc/sysdeps/unix/sysv/linux/bits/fcntl-linux.h.html
+	bool isReadable() {
+		int ret = fcntl(file, F_GETFL) & 0xff;
+		return (ret == 0) || (ret == 2);
+	}
+
+	bool isWritable() {
+		int ret = fcntl(file, F_GETFL) & 0xff;
+		return (ret == 1) || (ret == 2);
 	}
     
   private:

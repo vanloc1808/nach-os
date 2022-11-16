@@ -3,7 +3,7 @@
 int main() {
     char filePath1[256];
     char filePath2[256];
-    char buffer[1024];
+    char buffer[256];
     int count;
 
     int fd1;
@@ -21,7 +21,7 @@ int main() {
     fd2 = Open(filePath2, 1);
     if (fd1 != -1 && fd2 != -1) {
         
-        while (count = Read(buffer, 1024, fd1) > 0) {
+        while ((count = Read(buffer, 256, fd1)) > 0) {
             Write(buffer, count, fd2);
         }
 

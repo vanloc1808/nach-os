@@ -45,11 +45,11 @@
 class FileSystem {
   public:
     FileSystem() { 
-		fdTable = new int[20]; 
-		fdTable[0] = 0; 
-		fdTable[1] = 1;
+		fdTable = new OpenFile*[20]; 
+		fdTable[0] = new OpenFile(0); 
+		fdTable[1] = new OpenFile(1);
 		for (int i = 2; i < 20; i++) {
-			fdTable[i] = -1;
+			fdTable[i] = NULL;
 		}
 	}
 
@@ -76,14 +76,14 @@ class FileSystem {
 			if (fd == -1) return -1;
 
 			for (int i = 2; i < 20; i++) {
-				if (fdTable[i] == -1) {
-					fdTable[i] = fd;
-					return fd;
+				if (fdTable[i] == NULL) {
+					fdTable[i] = new OpenFile(fd);
+					return i;
 				}
 			}
 
 			// No slot for fd -> close and return error
-			Close(fd);
+			close(fd);
 			return -1;
 
 		} else if (accessType == 1) { // read & write
@@ -91,14 +91,14 @@ class FileSystem {
 			if (fd == -1) return -1;
 
 			for (int i = 2; i < 20; i++) {
-				if (fdTable[i] == -1) {
-					fdTable[i] = fd;
-					return fd;
+				if (fdTable[i] == NULL) {
+					fdTable[i] = new OpenFile(fd);
+					return i;
 				}
 			}
 
 			// No slot for fd -> close and return error
-			Close(fd);
+			close(fd);
 			return -1;
 		} else {
 			return -1;
@@ -106,18 +106,23 @@ class FileSystem {
 	}
 
 	int Close(int fd) {
-		for (int i = 2; i < 20; i++) {
-			if (fdTable[i] == fd) {
-				fdTable[i] = -1;
-				return close(fd);
-			}
+		if (fdTable[fd] == NULL)
+			return -1;
+		else {
+			delete fdTable[fd];
+			return 0;
 		}
-		return -1;
+	}
+
+	OpenFile* get(int fd) {
+		if (fdTable == NULL) return NULL;
+		if (fd < 2 || fd >= 20) return NULL;
+		return fdTable[fd];
 	}
 
 	~FileSystem() { delete[] fdTable; }
   private:
-	int* fdTable;
+	OpenFile** fdTable;
 };
 
 #else // FILESYS

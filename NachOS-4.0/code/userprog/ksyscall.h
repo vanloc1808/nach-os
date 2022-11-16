@@ -225,21 +225,30 @@ void SysRemove(char* name) {
 
 
 int SysRead(char* buffer, int length, int fd) {
-	OpenFile* of = new OpenFile(fd);
+	// OpenFile* of = new OpenFile(fd);
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
+	if (!of->isReadable()) {
+		return -1;
+	}
 	int value = of->Read(buffer, length);
-	delete of;
 	return value;
 }
 
 int SysWrite(char* buffer, int length, int fd) {
-	OpenFile* of = new OpenFile(fd);
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
+	if (of == NULL) return -1;
+	if (!of->isWritable()) {
+		return -1;
+	}
 	int value = of->Write(buffer, length);
-	delete of;
 	return value;
 }
 
 int SysSeek(int position, int fd) {
-	OpenFile* of = new OpenFile(fd);
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
 	int value = of->Seek(position);
 	delete of;
 	return value;
@@ -463,7 +472,7 @@ void SystemCallRead() {
 		kernel->machine->WriteRegister(2, i);
 	} else {
 		int result = SysRead(buffer, length, fd);
-
+		// DEBUG(dbgSys, "GET: " << result << "\n");
 		// System to User space
 		if (result != -1)
 			System2User(virtAddr, result, buffer);
