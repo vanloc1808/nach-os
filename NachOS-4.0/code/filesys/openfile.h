@@ -53,6 +53,19 @@ class OpenFile {
 		}
 
     int Length() { Lseek(file, 0, 2); return Tell(file); }
+
+	int Seek(int position) {
+		int length = this->Length();
+		if (position == -1) {
+			currentOffset = length;
+			return currentOffset;
+		} else if (0 <= position && position <= length) {
+			currentOffset = position;
+			return position;
+		} else {
+			return -1;
+		}
+	}
     
   private:
     int file;
