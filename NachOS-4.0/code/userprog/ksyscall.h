@@ -198,7 +198,27 @@ int SysRandomNum()
 	return rand();
 }
 
+OpenFileId Open(char *name, int type){
+	if (type != 0 && type != 1){
+		SysPrintString("Open type error.\n");
+		//
+		return -1;
+	}
+	Directory *directory = new Directory(NumDirEntries);
+    OpenFile *openFile = NULL;
+    int sector;
+    directory->FetchFrom(directoryFile);
+    sector = directory->Find(name); 
+    if (sector >= 0) {
+		openFile = new OpenFile(sector, type);
+	
+    delete directory;
+    return openFile;	 	
+}
 
+int Close(OpenFileId id){
+	return 0;
+}
 
 // --------------------------------------------------------------------
 
@@ -362,6 +382,36 @@ void SystemCallPrintString() {
 	}
 }
 
+void SystemCallOpenFile() {
+	DEBUG(dbgSys, "\nOpening a file.");
+	int bufAddr;
+	bufAddr = kernel->machine->ReadRegister(4);
+	
+	int typeOpenFile = kernel->machine->ReadRegister(5);
+	OpenFile* file = NULL;
+	char *buf = new char[LIMIT];
+	buf = kernel->machine->User2System(bufAddr, LIMIT);
+	file = fileSystem->Open(buf, 0);
+	if (file != NULL) {
+		DEBUG(dbgSys,"\nOpen file " << bufAddr << " successfully!");
+		kernel->machine->WriteRegister(2, file);
+	} 
+	else {
+		DEBUG(dbgSys, "\nError while opening file " << bufAddr << "!");
+		kernel->machine->WriteRegister(2, -1);
+	};
+	delete [] buf;
+}
+
+void SystemCallCloseFile(){
+	DEBUG(dbgSys, "\nClosing a file.");
+	int m_index = kernel->machine->ReadRegister(4);
+	if (fileSystem->openf[m_index] != NULL) {
+		delete fileSystem->openf[m_index];
+		fileSystem->openf[m_index] = NULL;
+	}
+	
+}
 // --------------------------------------------------------------------
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
