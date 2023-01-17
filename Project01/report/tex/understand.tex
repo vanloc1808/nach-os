@@ -1,8 +1,0 @@
-\section{Hiểu mã chương trình NachOS}
-Mã NachOS hiện nay ở mức 1 người dùng bằng chương trình C tại một thời điểm.\\
-Chương trình \textbf{halt}, yêu cầu hệ điều hành tắt máy, được sử dụng để thử nghiệm NachOS.\\
-Dò tìm khi chương trình người dùng nạp, chạy, và gọi một system call.
-
-\section{Hiểu thiết kế NachOS}
-NachOS cung cấp một CPU giả lập, thực tế CPU giả lập này giống hệt CPU thật (MIPS-32 bit chip), nhưng chúng ta không thể chỉ thực thi chương trình như một tiến trình bình thường của UNIX, bởi vì chúng ta muốn kiểm soát có bao nhiêu lệnh được thực hiện trong một đơn vị thời gian, không gian địa chỉ làm việc như thế nào, các interrupt và exception (systel calls) được xử lý ra sao.\\
-NachOS cung cấp môi trường giả lập để chạy các chương trình C, chương trình biên dịch thông qua gcc/g++ tạo file object, sau đó chuyển sang định dạng đặc biệt của NachOS nhờ "coff2noff".
