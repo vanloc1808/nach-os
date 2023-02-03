@@ -36,15 +36,24 @@
 #include "copyright.h"
 #include "sysdep.h"
 #include "openfile.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 #ifdef FILESYS_STUB 		// Temporarily implement file system calls as 
 				// calls to UNIX, until the real file system
 				// implementation is available
 class FileSystem {
   public:
-    FileSystem() {}
+    FileSystem() { 
+		fdTable = new OpenFile*[20]; 
+		fdTable[0] = new OpenFile(0); 
+		fdTable[1] = new OpenFile(1);
+		for (int i = 2; i < 20; i++) {
+			fdTable[i] = NULL;
+		}
+	}
 
-    bool Create(char *name, int initialSize) { //https://users.cs.duke.edu/~narten/110/nachos/main/node24.html
+    bool Create(char *name, int initializeState) { //https://users.cs.duke.edu/~narten/110/nachos/main/node24.html
 	int fileDescriptor = OpenForWrite(name);
 
 	if (fileDescriptor == -1) return FALSE;
@@ -59,8 +68,88 @@ class FileSystem {
 	  return new OpenFile(fileDescriptor);
       }
 
-    bool Remove(char *name) { return Unlink(name) == 0; }
+    int Remove(char *name) { 
+		int inode;
+		int fd;
+		int tempInode;
+		OpenFile* openFile;
 
+		fd = open(name, O_RDONLY);
+		if (fd == -1) return -1;
+
+		openFile = new OpenFile(fd);
+		inode = openFile->getInode();
+
+		for (int i = 2; i < 20; i++) {
+			if (fdTable[i] != NULL) {
+				tempInode = fdTable[i]->getInode();
+				
+				if (inode == tempInode) {
+					close(fd);
+					return -1;
+				}
+			}
+			
+		}
+
+		close(fd);
+
+		return Unlink(name) == 0; }
+
+	int Open(char* name, int accessType) { // Based on lib/sysdep.cc
+		if (accessType == 0) { // read only
+			int fd = open(name, O_RDONLY);
+			if (fd == -1) return -1;
+
+			for (int i = 2; i < 20; i++) {
+				if (fdTable[i] == NULL) {
+					fdTable[i] = new OpenFile(fd);
+					return i;
+				}
+			}
+
+			// No slot for fd -> close and return error
+			close(fd);
+			return -1;
+
+		} else if (accessType == 1) { // read & write
+			int fd = open(name, O_RDWR | O_CREAT, 0666);
+			if (fd == -1) return -1;
+
+			for (int i = 2; i < 20; i++) {
+				if (fdTable[i] == NULL) {
+					fdTable[i] = new OpenFile(fd);
+					return i;
+				}
+			}
+
+			// No slot for fd -> close and return error
+			close(fd);
+			return -1;
+		} else {
+			return -1;
+		}
+	}
+
+	int Close(int fd) {
+		if ((fd < 2) || (fd >= 20) || (fdTable[fd] == NULL))
+			return -1;
+		else {
+			delete fdTable[fd];
+			fdTable[fd] = NULL;
+			return 0;
+		}
+	}
+
+	OpenFile* get(int fd) {
+		if (fdTable == NULL) return NULL;
+		if (fd < 2 || fd >= 20) return NULL;
+		return fdTable[fd];
+	}
+
+	~FileSystem() { delete[] fdTable; }
+  private:
+	OpenFile** fdTable;
 };
 
 #else // FILESYS

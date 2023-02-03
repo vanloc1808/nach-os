@@ -13,9 +13,6 @@
 
 #include "kernel.h"
 #include "synchconsole.h"
-#include "..\filesys\filesys.h"
-#include "..\filesys\directory.h"
-#include "..\filesys\filehdr.h"
 
 #define MAX_SIZE 1024
 
@@ -198,26 +195,70 @@ int SysRandomNum()
 	return rand();
 }
 
-OpenFileId Open(char *name, int type){
-	if (type != 0 && type != 1){
-		SysPrintString("Open type error.\n");
-		//
-		return -1;
+void SysCreate(char* name) {
+	if ((name == NULL) || strlen(name) == 0) {
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} 
+
+	if (kernel->fileSystem->Create(name, 0)) {
+		kernel->machine->WriteRegister(2, 0);
+	} else {
+		kernel->machine->WriteRegister(2, -1);
 	}
-	Directory *directory = new Directory(NumDirEntries);
-    OpenFile *openFile = NULL;
-    int sector;
-    directory->FetchFrom(directoryFile);
-    sector = directory->Find(name); 
-    if (sector >= 0) {
-		openFile = new OpenFile(sector, type);
-	
-    delete directory;
-    return openFile;	 	
+	return;
+} 
+
+void SysRemove(char* name) {
+	if ((name == NULL) || strlen(name) == 0) {
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	}
+
+	if (kernel->fileSystem->Remove(name) == 1) {
+		kernel->machine->WriteRegister(2, 0);
+	} else {
+		kernel->machine->WriteRegister(2, -1);
+	}
+	return;
 }
 
-int Close(OpenFileId id){
-	return 0;
+
+int SysRead(char* buffer, int length, int fd) {
+	// OpenFile* of = new OpenFile(fd);
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
+	if (!of->isReadable()) {
+		return -1;
+	}
+	int value = of->Read(buffer, length);
+	return value;
+}
+
+int SysWrite(char* buffer, int length, int fd) {
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
+	if (of == NULL) return -1;
+	if (!of->isWritable()) {
+		return -1;
+	}
+	int value = of->Write(buffer, length);
+	return value;
+}
+
+int SysSeek(int position, int fd) {
+	OpenFile* of = kernel->fileSystem->get(fd);
+	if (of == NULL) return -1;
+	int value = of->Seek(position);
+	return value;
+}
+
+int SysOpen(char* fileName, int accessType) {
+	return kernel->fileSystem->Open(fileName, accessType);
+}
+
+int SysClose(int fd) {
+	return kernel->fileSystem->Close(fd);
 }
 
 // --------------------------------------------------------------------
@@ -382,36 +423,127 @@ void SystemCallPrintString() {
 	}
 }
 
-void SystemCallOpenFile() {
-	DEBUG(dbgSys, "\nOpening a file.");
-	int bufAddr;
-	bufAddr = kernel->machine->ReadRegister(4);
+void SystemCallCreate() {
+	int bufferWrite;
+	char* tempWrite;
+	bufferWrite = kernel->machine->ReadRegister(4);
+
+	tempWrite = User2System(bufferWrite, MAX_SIZE);
 	
-	int typeOpenFile = kernel->machine->ReadRegister(5);
-	OpenFile* file = NULL;
-	char *buf = new char[LIMIT];
-	buf = kernel->machine->User2System(bufAddr, LIMIT);
-	file = fileSystem->Open(buf, 0);
-	if (file != NULL) {
-		DEBUG(dbgSys,"\nOpen file " << bufAddr << " successfully!");
-		kernel->machine->WriteRegister(2, file);
-	} 
-	else {
-		DEBUG(dbgSys, "\nError while opening file " << bufAddr << "!");
-		kernel->machine->WriteRegister(2, -1);
-	};
-	delete [] buf;
+	SysCreate(tempWrite);
+	delete[] tempWrite;
 }
 
-void SystemCallCloseFile(){
-	DEBUG(dbgSys, "\nClosing a file.");
-	int m_index = kernel->machine->ReadRegister(4);
-	if (fileSystem->openf[m_index] != NULL) {
-		delete fileSystem->openf[m_index];
-		fileSystem->openf[m_index] = NULL;
-	}
-	
+void SystemCallRemove() {
+	int bufferWrite;
+	char* tempWrite;
+	bufferWrite = kernel->machine->ReadRegister(4);
+
+	tempWrite = User2System(bufferWrite, MAX_SIZE);
+
+	SysRemove(tempWrite);
+	delete[] tempWrite;
 }
+
+void SystemCallRead() {
+	DEBUG(dbgSys, "\n Reading file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+
+	char* buffer = new char[length];
+	if (buffer == NULL || fd == 1 || fd < 0) {
+		SysPrintString((char*) invalid_error); // Todo: better error comment
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 0) { // Handle console
+		SynchConsoleInput* inp = (SynchConsoleInput*)kernel->synchConsoleIn;
+		int i = 0;
+		while (i < length) {
+			buffer[i] = inp->GetChar();
+			if (buffer[i] == EOF) { // End of read
+				buffer[i] = 0;
+				break;
+			}
+			i++;
+		}
+		System2User(virtAddr, i, buffer, 1);
+		kernel->machine->WriteRegister(2, i);
+	} else {
+		int result = SysRead(buffer, length, fd);
+		// DEBUG(dbgSys, "GET: " << result << "\n");
+		// System to User space
+		if (result != -1)
+			System2User(virtAddr, result, buffer);
+
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallWrite() {
+	DEBUG(dbgSys, "\n Writing file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int length = kernel->machine->ReadRegister(5);
+	int fd = kernel->machine->ReadRegister(6);
+	
+	// User to System space
+	char* buffer = User2System(virtAddr, length, 1);
+
+	if (buffer == NULL || fd <= 0) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	} else if (fd == 1) { // Handle console
+		SynchConsoleOutput* out = (SynchConsoleOutput*)kernel->synchConsoleOut;
+		for (int i = 0; i < length; i++) {
+			out->PutChar(buffer[i]);
+		}
+		kernel->machine->WriteRegister(2, length); // Todo: suppose writing to console alway perfect!
+	} else {
+		int result = SysWrite(buffer, length, fd);
+		kernel->machine->WriteRegister(2, result);
+	}
+	delete[] buffer;
+}
+
+void SystemCallSeek() {
+	DEBUG(dbgSys, "\n Seek file");
+	int position = kernel->machine->ReadRegister(4);
+	int fd = kernel->machine->ReadRegister(5);
+
+	// Handle fd 0|1
+	if (fd < 2) {
+		SysPrintString((char*) invalid_error);
+		kernel->machine->WriteRegister(2, -1);
+		return;
+	}
+
+	int result = SysSeek(position, fd);
+	kernel->machine->WriteRegister(2, result);
+}
+
+void SystemCallOpen() {
+	DEBUG(dbgSys, "\n Open file");
+	int virtAddr = kernel->machine->ReadRegister(4);
+	int accessType = kernel->machine->ReadRegister(5);
+
+	char* buffer = User2System(virtAddr, MAX_SIZE);
+
+	int result = SysOpen(buffer, accessType);
+
+	kernel->machine->WriteRegister(2, result);
+
+	delete[] buffer;
+}
+
+void SystemCallClose() {
+	DEBUG(dbgSys, "\n Close file");
+	int fd = kernel->machine->ReadRegister(4);
+	int result = SysClose(fd);
+	kernel->machine->WriteRegister(2, result);
+}
+
 // --------------------------------------------------------------------
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
