@@ -2,19 +2,18 @@
 
 int main() {
     char filePath[256];
-    char buffer[1024];
+    char buffer[256];
     int count = 0;
+    int fd = -1;
     PrintString("Filepath: ");
     
     ReadString(filePath, 255); // Read from console!
     filePath[255] = 0; // Nullbyte for last char
-    // PrintString(filePath);
-    // PrintChar('\n');
 
-    int fd = Open(filePath, 0);
+    fd = Open(filePath, 0);
+    
     if (fd != -1) {
-        
-        while (count = Read(buffer, 1024, fd) > 0) {
+        while ((count = Read(buffer, 256, fd)) > 0) {
             Write(buffer, count, 1);
         }
 
@@ -23,7 +22,7 @@ int main() {
         PrintString("Unable to open file\n");
     }
 
-
+    PrintChar('\n');
 
     Halt();
 }

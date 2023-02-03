@@ -245,3 +245,9 @@ concatenate.o: concatenate.c
 concatenate: concatenate.o start.o
 	$(LD) $(LDFLAGS) start.o concatenate.o -o concatenate.coff
 	$(COFF2NOFF) concatenate.coff concatenate
+
+test.o: test.c
+	$(CC) $(CFLAGS) -c test.c
+test: test.o start.o
+	$(LD) $(LDFLAGS) start.o test.o -o test.coff
+	$(COFF2NOFF) test.coff test

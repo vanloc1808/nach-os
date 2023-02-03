@@ -23,6 +23,10 @@
 #include "copyright.h"
 #include "utility.h"
 #include "sysdep.h"
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #ifdef FILESYS_STUB			// Temporarily implement calls to 
 					// Nachos file system as calls to UNIX!
@@ -65,6 +69,33 @@ class OpenFile {
 		} else {
 			return -1;
 		}
+	}
+
+	// https://stackoverflow.com/questions/9480568/find-inode-number-of-a-file-using-c-code
+	int getInode() {
+		struct stat file_stat;
+		int ret;
+
+		ret = fstat(this->file, &file_stat);
+		
+ 		if (ret < 0) {
+			return -1;
+		}
+
+		return file_stat.st_ino;
+	}
+
+
+	// https://stackoverflow.com/questions/63050749/how-to-get-flags-of-opened-fd-in-c
+	// https://codebrowser.dev/glibc/glibc/sysdeps/unix/sysv/linux/bits/fcntl-linux.h.html
+	bool isReadable() {
+		int ret = fcntl(file, F_GETFL) & 0xff;
+		return (ret == 0) || (ret == 2);
+	}
+
+	bool isWritable() {
+		int ret = fcntl(file, F_GETFL) & 0xff;
+		return (ret == 1) || (ret == 2);
 	}
     
   private:

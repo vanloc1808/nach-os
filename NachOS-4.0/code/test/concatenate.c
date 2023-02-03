@@ -3,8 +3,11 @@
 int main() {
     char filePath1[256];
     char filePath2[256];
-    char buffer[1024];
+    char buffer[256];
     int count;
+    int fd1;
+    int fd2;
+    int pos;
 
     PrintString("Filepath 1: ");
     ReadString(filePath1, 255); // Read from console!
@@ -14,16 +17,13 @@ int main() {
     ReadString(filePath2, 255); // Read from console!
     filePath2[255] = 0; // Nullbyte for last char
 
-    int fd1 = Open(filePath1, 0);
-    int fd2 = Open(filePath2, 0);
-    if (fd1 != -1 && fd2 != -1) {
-        
-        while (count = Read(buffer, 1024, fd1) > 0) {
-            Write(buffer, count, 1);
-        }
+    fd1 = Open(filePath1, 1); // Write to end of file 1
+    pos = Seek(-1, fd1);
+    fd2 = Open(filePath2, 0);
+    if (fd1 != -1 && fd2 != -1 && pos != -1) {
 
-        while (count = Read(buffer, 1024, fd2) > 0) {
-            Write(buffer, count, 1);
+        while ((count = Read(buffer, 256, fd2)) > 0) {
+            Write(buffer, count, fd1);
         }
 
         Close(fd1);

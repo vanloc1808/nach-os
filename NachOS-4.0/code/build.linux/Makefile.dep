@@ -636,7 +636,17 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../lib/list.cc ../machine/callback.h \
  ../threads/main.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../machine/stats.h ../threads/alarm.h ../machine/timer.h
 stats.o: ../machine/stats.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../lib/debug.h ../lib/utility.h ../lib/sysdep.h \
@@ -870,7 +880,17 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h ../machine/stats.h \
  ../threads/alarm.h
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
@@ -990,7 +1010,17 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h ../machine/stats.h \
  ../threads/alarm.h ../machine/timer.h
 machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
@@ -1110,9 +1140,19 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../lib/list.h ../lib/list.cc \
- ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
- ../threads/alarm.h ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
+ ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
+ ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
+ ../machine/timer.h
 mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../lib/debug.h ../lib/utility.h ../lib/sysdep.h \
  /usr/include/c++/4.8/iostream \
@@ -1230,9 +1270,20 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../machine/machine.h ../machine/translate.h \
  ../machine/mipssim.h ../threads/main.h ../threads/kernel.h \
  ../threads/thread.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../lib/list.h \
- ../lib/list.cc ../machine/interrupt.h ../machine/callback.h \
- ../machine/stats.h ../threads/alarm.h ../machine/timer.h
+ ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
+ ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
+ ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
+ ../machine/timer.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/main.h ../lib/debug.h ../lib/utility.h \
  ../lib/sysdep.h /usr/include/c++/4.8/iostream \
@@ -1349,7 +1400,17 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/timer.h
@@ -1470,7 +1531,17 @@ network.o: ../machine/network.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h ../machine/stats.h \
  ../threads/alarm.h ../machine/timer.h
 disk.o: ../machine/disk.cc /usr/include/stdc-predef.h ../lib/copyright.h \
@@ -1590,9 +1661,18 @@ disk.o: ../machine/disk.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  /usr/include/strings.h ../threads/main.h ../threads/kernel.h \
  ../threads/thread.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../lib/list.h ../lib/list.cc \
- ../machine/interrupt.h ../machine/stats.h ../threads/alarm.h \
- ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
+ ../lib/list.h ../lib/list.cc ../machine/interrupt.h ../machine/stats.h \
+ ../threads/alarm.h ../machine/timer.h
 alarm.o: ../threads/alarm.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/alarm.h ../lib/utility.h \
  ../machine/callback.h ../machine/timer.h ../threads/main.h \
@@ -1710,7 +1790,17 @@ alarm.o: ../threads/alarm.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h ../machine/stats.h
 kernel.o: ../threads/kernel.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../lib/debug.h ../lib/utility.h ../lib/sysdep.h \
@@ -1829,12 +1919,22 @@ kernel.o: ../threads/kernel.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../threads/main.h ../threads/kernel.h \
  ../threads/thread.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../lib/list.h ../lib/list.cc \
- ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
- ../threads/alarm.h ../machine/timer.h ../threads/synch.h \
- ../threads/synchlist.h ../threads/synchlist.cc ../lib/libtest.h \
- ../userprog/synchconsole.h ../machine/console.h ../filesys/synchdisk.h \
- ../machine/disk.h ../network/post.h ../machine/network.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
+ ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
+ ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
+ ../machine/timer.h ../threads/synch.h ../threads/synchlist.h \
+ ../threads/synchlist.cc ../lib/libtest.h ../userprog/synchconsole.h \
+ ../machine/console.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../network/post.h ../machine/network.h
 main.o: ../threads/main.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  ../threads/main.h ../lib/debug.h ../lib/utility.h ../lib/sysdep.h \
  /usr/include/c++/4.8/iostream \
@@ -1951,7 +2051,17 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/timer.h
@@ -2072,9 +2182,19 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../threads/scheduler.h ../lib/list.h \
  ../lib/list.cc ../threads/thread.h ../machine/machine.h \
  ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/main.h ../threads/kernel.h \
- ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
- ../threads/alarm.h ../machine/timer.h
+ ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/main.h \
+ ../threads/kernel.h ../machine/interrupt.h ../machine/callback.h \
+ ../machine/stats.h ../threads/alarm.h ../machine/timer.h
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/synch.h ../threads/thread.h \
  ../lib/utility.h ../lib/sysdep.h /usr/include/c++/4.8/iostream \
@@ -2191,10 +2311,19 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../lib/list.h ../lib/debug.h ../lib/list.cc ../threads/main.h \
- ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
- ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
- ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../lib/list.h \
+ ../lib/debug.h ../lib/list.cc ../threads/main.h ../threads/kernel.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/callback.h \
+ ../machine/stats.h ../threads/alarm.h ../machine/timer.h
 synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/synchlist.h ../lib/list.h ../lib/debug.h \
  ../lib/utility.h ../lib/sysdep.h /usr/include/c++/4.8/iostream \
@@ -2312,9 +2441,19 @@ synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../lib/list.cc ../threads/synch.h \
  ../threads/thread.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/main.h ../threads/kernel.h ../threads/scheduler.h \
- ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
- ../threads/alarm.h ../machine/timer.h ../threads/synchlist.cc
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/main.h \
+ ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
+ ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
+ ../machine/timer.h ../threads/synchlist.cc
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/thread.h ../lib/utility.h ../lib/sysdep.h \
  /usr/include/c++/4.8/iostream \
@@ -2431,10 +2570,20 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/switch.h ../threads/synch.h ../lib/list.h ../lib/debug.h \
- ../lib/list.cc ../threads/main.h ../threads/kernel.h \
- ../threads/scheduler.h ../machine/interrupt.h ../machine/callback.h \
- ../machine/stats.h ../threads/alarm.h ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/switch.h \
+ ../threads/synch.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../threads/kernel.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
+ ../threads/alarm.h ../machine/timer.h
 addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/main.h ../lib/debug.h ../lib/utility.h \
  ../lib/sysdep.h /usr/include/c++/4.8/iostream \
@@ -2551,7 +2700,17 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/timer.h ../userprog/noff.h
@@ -2671,7 +2830,17 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../threads/kernel.h ../threads/thread.h \
  ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../filesys/filesys.h ../filesys/openfile.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/scheduler.h \
  ../lib/list.h ../lib/list.cc ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/timer.h ../userprog/syscall.h ../userprog/errno.h \
@@ -2794,9 +2963,19 @@ synchconsole.o: ../userprog/synchconsole.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../lib/list.h ../lib/debug.h ../lib/list.cc ../threads/main.h \
- ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
- ../machine/stats.h ../threads/alarm.h ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../lib/list.h \
+ ../lib/debug.h ../lib/list.cc ../threads/main.h ../threads/kernel.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
+ ../threads/alarm.h ../machine/timer.h
 directory.o: ../filesys/directory.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../lib/utility.h ../filesys/filehdr.h \
  ../machine/disk.h ../machine/callback.h ../filesys/pbitmap.h \
@@ -2913,7 +3092,17 @@ directory.o: ../filesys/directory.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../filesys/directory.h
+ /usr/include/strings.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../filesys/directory.h
 filehdr.o: ../filesys/filehdr.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../filesys/filehdr.h ../machine/disk.h \
  ../lib/utility.h ../machine/callback.h ../filesys/pbitmap.h \
@@ -3030,12 +3219,22 @@ filehdr.o: ../filesys/filehdr.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../lib/debug.h ../filesys/synchdisk.h \
- ../threads/synch.h ../threads/thread.h ../machine/machine.h \
- ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../lib/list.h ../lib/list.cc ../threads/main.h ../threads/kernel.h \
- ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
- ../threads/alarm.h ../machine/timer.h
+ /usr/include/strings.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../lib/debug.h \
+ ../filesys/synchdisk.h ../threads/synch.h ../threads/thread.h \
+ ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../lib/list.h ../lib/list.cc ../threads/main.h \
+ ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
+ ../machine/stats.h ../threads/alarm.h ../machine/timer.h
 filesys.o: ../filesys/filesys.cc /usr/include/stdc-predef.h
 pbitmap.o: ../filesys/pbitmap.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../filesys/pbitmap.h ../lib/bitmap.h ../lib/utility.h \
@@ -3151,7 +3350,17 @@ pbitmap.o: ../filesys/pbitmap.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h
+ /usr/include/strings.h /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h
 openfile.o: ../filesys/openfile.cc /usr/include/stdc-predef.h
 synchdisk.o: ../filesys/synchdisk.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../filesys/synchdisk.h ../machine/disk.h \
@@ -3270,9 +3479,19 @@ synchdisk.o: ../filesys/synchdisk.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../lib/list.h ../lib/debug.h ../lib/list.cc ../threads/main.h \
- ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
- ../machine/stats.h ../threads/alarm.h ../machine/timer.h
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../lib/list.h \
+ ../lib/debug.h ../lib/list.cc ../threads/main.h ../threads/kernel.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
+ ../threads/alarm.h ../machine/timer.h
 post.o: ../network/post.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  ../network/post.h ../lib/utility.h ../machine/callback.h \
  ../machine/network.h ../threads/synchlist.h ../lib/list.h ../lib/debug.h \
@@ -3391,9 +3610,19 @@ post.o: ../network/post.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  /usr/include/strings.h ../lib/list.cc ../threads/synch.h \
  ../threads/thread.h ../machine/machine.h ../machine/translate.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/main.h ../threads/kernel.h ../threads/scheduler.h \
- ../machine/interrupt.h ../machine/stats.h ../threads/alarm.h \
- ../machine/timer.h ../threads/synchlist.cc
+ /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h ../threads/main.h \
+ ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
+ ../machine/stats.h ../threads/alarm.h ../machine/timer.h \
+ ../threads/synchlist.cc
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
