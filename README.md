@@ -23,8 +23,10 @@ In this NachOS project, we implemented the following things:
 </ul>
 For more details, please see in:
 <ul>
-  <li>Project requirements: [Project 1](https://github.com/vanloc1808/NachOS/blob/main/CQ_Project_01_HK2_2122.pdf), [Project 2](https://github.com/vanloc1808/NachOS/blob/main/CQ_Project_02_HK1_2223.pdf).</li>
-  <li>Project reports: [Project 1](https://github.com/vanloc1808/NachOS/blob/main/Reports/Project01.pdf), [Project 2](https://github.com/vanloc1808/NachOS/blob/main/Reports/Project02.pdf).</li>
+  <li>Project requirements: ![Project 1](https://github.com/vanloc1808/NachOS/blob/main/CQ_Project_01_HK2_2122.pdf), 
+  ![Project 2](https://github.com/vanloc1808/NachOS/blob/main/CQ_Project_02_HK1_2223.pdf).</li>
+  <li>Project reports: ![Project 1](https://github.com/vanloc1808/NachOS/blob/main/Reports/Project01.pdf), 
+  ![Project 2](https://github.com/vanloc1808/NachOS/blob/main/Reports/Project02.pdf).</li>
 </ul>
 
 ## About us
